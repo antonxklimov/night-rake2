@@ -15,7 +15,7 @@ class FakeContext:
             print("[RESPONSE]", obj)
             return obj
 
-# Пример update из Telegram (теперь с командой /start и реальным chat_id)
+# Пример update из Telegram (тест /start с реальным chat_id)
 test_update = {
     "update_id": 123456789,
     "message": {
