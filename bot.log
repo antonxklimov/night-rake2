@@ -1,0 +1,49 @@
+/Users/antonklimov/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.369709 seconds and try again... (tryings = 1, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.763357 seconds and try again... (tryings = 2, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 2.175820 seconds and try again... (tryings = 3, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 2.678665 seconds and try again... (tryings = 4, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 3.460458 seconds and try again... (tryings = 5, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.458873 seconds and try again... (tryings = 6, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.016829 seconds and try again... (tryings = 7, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 4.899957 seconds and try again... (tryings = 8, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 5.012686 seconds and try again... (tryings = 9, bot id = 7427155199)
+Received SIGTERM signal
+[SYNC] Users cache synced at 2025-06-24 12:45:34.619332
+[SYNC] Users cache synced at 2025-06-24 12:45:51.949080
+[SYNC] Users cache synced at 2025-06-24 12:46:08.964763
+[SYNC] Users cache synced at 2025-06-24 12:46:25.860669
+[SYNC] Users cache synced at 2025-06-24 12:46:43.133616
+[SYNC] Users cache synced at 2025-06-24 12:47:00.914668
+[SYNC] Users cache synced at 2025-06-24 12:47:17.585755
+[SYNC] Users cache synced at 2025-06-24 12:47:34.974181
+[SYNC] Users cache synced at 2025-06-24 12:47:51.752585
+[SYNC] Users cache synced at 2025-06-24 12:48:08.377044
+[SYNC] Users cache synced at 2025-06-24 12:48:24.994571
+[SYNC] Users cache synced at 2025-06-24 12:48:41.719313
+[SYNC] Users cache synced at 2025-06-24 12:48:59.291665
+[SYNC] Users cache synced at 2025-06-24 12:49:16.027327
+[SYNC] Users cache synced at 2025-06-24 12:49:33.112373
+[SYNC] Users cache synced at 2025-06-24 12:49:50.766059
+[SYNC] Users cache synced at 2025-06-24 12:50:08.457201
+[SYNC] Users cache synced at 2025-06-24 12:50:25.349554
+[SYNC] Users cache synced at 2025-06-24 12:50:43.161501
+[SYNC] Users cache synced at 2025-06-24 12:50:59.965496
+[SYNC] Users cache synced at 2025-06-24 12:51:17.164399
+[SYNC] Users cache synced at 2025-06-24 12:51:34.305213
+[SYNC] Users cache synced at 2025-06-24 12:51:52.995038
+[SYNC] Users cache synced at 2025-06-24 12:52:10.160756

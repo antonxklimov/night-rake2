@@ -1,0 +1,357 @@
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Cause exception while process update id=949655558 by bot id=7427155199
+TypeError: cmd_start() got an unexpected keyword argument 'dispatcher'
+Traceback (most recent call last):
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/bot.py", line 187, in wrapper
+    return await handler(message, *args, **kwargs)
+TypeError: cmd_start() got an unexpected keyword argument 'dispatcher'
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7427155199)
+Cause exception while process update id=949655559 by bot id=7427155199
+TypeError: cmd_start() got an unexpected keyword argument 'dispatcher'
+Traceback (most recent call last):
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/bot.py", line 187, in wrapper
+    return await handler(message, *args, **kwargs)
+TypeError: cmd_start() got an unexpected keyword argument 'dispatcher'
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.483410 seconds and try again... (tryings = 1, bot id = 7427155199)
+Cause exception while process update id=949655560 by bot id=7427155199
+TypeError: cmd_start() got an unexpected keyword argument 'dispatcher'
+Traceback (most recent call last):
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/bot.py", line 187, in wrapper
+    return await handler(message, *args, **kwargs)
+TypeError: cmd_start() got an unexpected keyword argument 'dispatcher'
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.319465 seconds and try again... (tryings = 1, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 1.653970 seconds and try again... (tryings = 2, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 2.253473 seconds and try again... (tryings = 3, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 2.982555 seconds and try again... (tryings = 4, bot id = 7427155199)
+Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
+Sleep for 3.846097 seconds and try again... (tryings = 5, bot id = 7427155199)
+Received SIGTERM signal
+[SYNC] Users cache synced at 2025-06-23 23:33:26.559267
+[SYNC] Users cache synced at 2025-06-23 23:33:42.855677
+[SYNC] Users cache synced at 2025-06-23 23:33:59.025356
+[SYNC] Users cache synced at 2025-06-23 23:34:15.160820
+[SYNC] Users cache synced at 2025-06-23 23:34:32.536462
+[SYNC] Users cache synced at 2025-06-23 23:34:49.350754
+[SYNC] Users cache synced at 2025-06-23 23:35:05.672003
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Cause exception while process update id=949655561 by bot id=7427155199
+TypeError: cmd_start() got an unexpected keyword argument 'dispatcher'
+Traceback (most recent call last):
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/bot.py", line 187, in wrapper
+    return await handler(message, *args, **kwargs)
+TypeError: cmd_start() got an unexpected keyword argument 'dispatcher'
+Cause exception while process update id=949655562 by bot id=7427155199
+TypeError: cmd_start() got an unexpected keyword argument 'dispatcher'
+Traceback (most recent call last):
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/bot.py", line 187, in wrapper
+    return await handler(message, *args, **kwargs)
+TypeError: cmd_start() got an unexpected keyword argument 'dispatcher'
+Received SIGTERM signal
+[SYNC] Users cache synced at 2025-06-23 23:35:25.611729
+[SYNC] Users cache synced at 2025-06-23 23:35:41.752849
+[SYNC] Users cache synced at 2025-06-23 23:35:57.914865
+[SYNC] Users cache synced at 2025-06-23 23:36:14.019558
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Received SIGTERM signal
+[SYNC] Users cache synced at 2025-06-23 23:36:29.006390
+[SYNC] Users cache synced at 2025-06-23 23:36:45.141282
+[SYNC] Users cache synced at 2025-06-23 23:37:01.390034
+[SYNC] Users cache synced at 2025-06-23 23:37:17.668620
+[SYNC] Users cache synced at 2025-06-23 23:37:33.643264
+[SYNC] Users cache synced at 2025-06-23 23:37:49.814691
+[SYNC] Users cache synced at 2025-06-23 23:38:05.993915
+[SYNC] Users cache synced at 2025-06-23 23:38:22.148715
+[SYNC] Users cache synced at 2025-06-23 23:38:38.259613
+[SYNC] Users cache synced at 2025-06-23 23:38:54.566561
+[SYNC] Users cache synced at 2025-06-23 23:39:10.757745
+[SYNC] Users cache synced at 2025-06-23 23:39:27.566613
+[SYNC] Users cache synced at 2025-06-23 23:39:43.702857
+[SYNC] Users cache synced at 2025-06-23 23:39:59.584869
+[SYNC] Users cache synced at 2025-06-23 23:40:15.535995
+[SYNC] Users cache synced at 2025-06-23 23:40:31.436378
+[SYNC] Users cache synced at 2025-06-23 23:40:47.997881
+[SYNC] Users cache synced at 2025-06-23 23:41:04.866574
+[SYNC] Users cache synced at 2025-06-23 23:41:21.011210
+[SYNC] Users cache synced at 2025-06-23 23:41:37.191887
+[SYNC] Users cache synced at 2025-06-23 23:41:53.337651
+[SYNC] Users cache synced at 2025-06-23 23:42:09.477576
+[SYNC] Users cache synced at 2025-06-23 23:42:25.539664
+[SYNC] Users cache synced at 2025-06-23 23:42:42.360735
+[SYNC] Users cache synced at 2025-06-23 23:42:59.763291
+[SYNC] Users cache synced at 2025-06-23 23:43:15.977296
+[SYNC] Users cache synced at 2025-06-23 23:43:32.240581
+[SYNC] Users cache synced at 2025-06-23 23:43:48.531990
+[SYNC] Users cache synced at 2025-06-23 23:44:04.693389
+[SYNC] Users cache synced at 2025-06-23 23:44:20.818957
+[SYNC] Users cache synced at 2025-06-23 23:44:36.985319
+[SYNC] Users cache synced at 2025-06-23 23:44:53.170145
+[SYNC] Users cache synced at 2025-06-23 23:45:09.390667
+[SYNC] Users cache synced at 2025-06-23 23:45:25.460457
+[SYNC] Users cache synced at 2025-06-23 23:45:42.791342
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Cause exception while process update id=949655585 by bot id=7427155199
+KeyError: 'Привёл друга'
+Traceback (most recent call last):
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 309, in _process_update
+    response = await self.feed_update(bot, update, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 158, in feed_update
+    response = await self.update.wrap_outer_middleware(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/error.py", line 25, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/middlewares/user_context.py", line 56, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/fsm/middleware.py", line 42, in __call__
+    return await handler(event, data)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/dispatcher.py", line 276, in _listen_update
+    return await self.propagate_event(update_type=update_type, event=event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 146, in propagate_event
+    return await observer.wrap_outer_middleware(_wrapped, event=event, data=kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 141, in _wrapped
+    return await self._propagate_event(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/router.py", line 166, in _propagate_event
+    response = await observer.trigger(event, **kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/telegram.py", line 121, in trigger
+    return await wrapped_inner(event, kwargs)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/aiogram/dispatcher/event/handler.py", line 43, in call
+    return await wrapped()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/bot.py", line 270, in process_checkin_photo
+    conds = get_conditions(user)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/bot.py", line 106, in get_conditions
+    if user['Привёл друга'] == '1':
+KeyError: 'Привёл друга'
+Received SIGTERM signal
+[SYNC] Users cache synced at 2025-06-23 23:45:56.197689
+[SYNC] Users cache synced at 2025-06-23 23:46:12.354384
+[SYNC] Users cache synced at 2025-06-23 23:46:28.519568
+[SYNC] Users cache synced at 2025-06-23 23:46:44.685546
+[SYNC] Users cache synced at 2025-06-23 23:47:00.763390
+[SYNC] Users cache synced at 2025-06-23 23:47:16.917322
+[SYNC] Users cache synced at 2025-06-23 23:47:33.036344
+[SYNC] Users cache synced at 2025-06-23 23:47:49.172650
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Received SIGTERM signal
+[SYNC] Users cache synced at 2025-06-23 23:47:58.382586
+[SYNC] Users cache synced at 2025-06-23 23:48:14.633793
+[SYNC] Users cache synced at 2025-06-23 23:48:31.470975
+[SYNC] Users cache synced at 2025-06-23 23:48:47.704741
+[SYNC] Users cache synced at 2025-06-23 23:49:03.854276
+[SYNC] Users cache synced at 2025-06-23 23:49:19.757577
+[SYNC] Users cache synced at 2025-06-23 23:49:35.597274
+[SYNC] Users cache synced at 2025-06-23 23:49:51.446840
+[SYNC] Users cache synced at 2025-06-23 23:50:07.531860
+[SYNC] Users cache synced at 2025-06-23 23:50:23.622868
+[SYNC] Users cache synced at 2025-06-23 23:50:39.717437
+[SYNC] Users cache synced at 2025-06-23 23:50:55.881872
+[SYNC] Users cache synced at 2025-06-23 23:51:13.306196
+[SYNC] Users cache synced at 2025-06-23 23:51:29.482932
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Received SIGTERM signal
+[SYNC] Users cache synced at 2025-06-23 23:51:45.852043
+[SYNC] Users cache synced at 2025-06-23 23:52:02.021762
+[SYNC] Users cache synced at 2025-06-23 23:52:18.174747
+[SYNC] Users cache synced at 2025-06-23 23:52:34.389711
+[SYNC] Users cache synced at 2025-06-23 23:52:50.525909
+[SYNC] Users cache synced at 2025-06-23 23:53:06.842113
+[SYNC] Users cache synced at 2025-06-23 23:53:23.682591
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Received SIGTERM signal
+[SYNC] Users cache synced at 2025-06-23 23:53:32.154761
+[SYNC] Users cache synced at 2025-06-23 23:53:48.395150
+[SYNC] Users cache synced at 2025-06-23 23:54:04.522483
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Received SIGTERM signal
+[SYNC] Users cache synced at 2025-06-23 23:54:22.519526
+[SYNC] Users cache synced at 2025-06-23 23:54:38.923284
+[SYNC] Users cache synced at 2025-06-23 23:54:55.022543
+[SYNC] Users cache synced at 2025-06-23 23:55:10.907655
+[SYNC] Users cache synced at 2025-06-23 23:55:26.808316
+[SYNC] Users cache synced at 2025-06-23 23:55:42.979621
+[SYNC] Users cache synced at 2025-06-23 23:55:59.187470
+[SYNC] Users cache synced at 2025-06-23 23:56:15.398499
+[SYNC] Users cache synced at 2025-06-23 23:56:31.518910
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Task exception was never retrieved
+future: <Task finished name='Task-2' coro=<sync_users_cache() done, defined at /Users/antonklimov/Desktop/topgrabli_bot/bot.py:41> exception=RefreshError('invalid_grant: Invalid JWT Signature.', {'error': 'invalid_grant', 'error_description': 'Invalid JWT Signature.'})>
+Traceback (most recent call last):
+  File "/Users/antonklimov/Desktop/topgrabli_bot/bot.py", line 43, in sync_users_cache
+    ws = get_sheet()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/google_sheets.py", line 25, in get_sheet
+    sh = gc.open_by_key(SPREADSHEET_ID)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/gspread/client.py", line 146, in open_by_key
+    spreadsheet = Spreadsheet(self.http_client, {"id": key})
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/gspread/spreadsheet.py", line 25, in __init__
+    metadata = self.fetch_sheet_metadata()
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/gspread/spreadsheet.py", line 209, in fetch_sheet_metadata
+    return self.client.fetch_sheet_metadata(self.id, params=params)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/gspread/http_client.py", line 298, in fetch_sheet_metadata
+    r = self.request("get", url, params=params)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/gspread/http_client.py", line 109, in request
+    response = self.session.request(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/google/auth/transport/requests.py", line 537, in request
+    self.credentials.before_request(auth_request, method, url, request_headers)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/google/auth/credentials.py", line 230, in before_request
+    self._blocking_refresh(request)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/google/auth/credentials.py", line 193, in _blocking_refresh
+    self.refresh(request)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/google/oauth2/service_account.py", line 445, in refresh
+    access_token, expiry, _ = _client.jwt_grant(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/google/oauth2/_client.py", line 308, in jwt_grant
+    response_data = _token_endpoint_request(
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/google/oauth2/_client.py", line 279, in _token_endpoint_request
+    _handle_error_response(response_data, retryable_error)
+  File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/google/oauth2/_client.py", line 72, in _handle_error_response
+    raise exceptions.RefreshError(
+google.auth.exceptions.RefreshError: ('invalid_grant: Invalid JWT Signature.', {'error': 'invalid_grant', 'error_description': 'Invalid JWT Signature.'})
