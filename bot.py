@@ -653,11 +653,9 @@ async def main(context=None):
 
         app.router.add_post(WEBHOOK_PATH, handle_webhook)
 
-        # Установить вебхук у Telegram
-        await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
-        print(f"[WEBHOOK] Set webhook: {WEBHOOK_URL}")
+        # Вебхук регистрируется вручную, не вызываем set_webhook здесь
+        print(f"[WEBHOOK] Webhook URL: {WEBHOOK_URL}")
 
-        # Запуск aiohttp-сервера
         runner = web.AppRunner(app)
         await runner.setup()
         site = web.TCPSite(runner, "0.0.0.0", 8080)
