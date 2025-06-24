@@ -231,13 +231,20 @@ def get_main_kb(user):
     if visits and visits[-1] == today:
         return ReplyKeyboardMarkup(
             keyboard=[
-                [KeyboardButton(text="Прогресс")],
-                [KeyboardButton(text="Баланс")]
+                [KeyboardButton(text="Прогресс ✏️")],
+                [KeyboardButton(text="Баланс 🏦")]
             ],
             resize_keyboard=True
         )
     else:
-        return main_kb
+        return ReplyKeyboardMarkup(
+            keyboard=[
+                [KeyboardButton(text="Зачекиниться ✔️")],
+                [KeyboardButton(text="Прогресс ✏️")],
+                [KeyboardButton(text="Баланс 🏦")]
+            ],
+            resize_keyboard=True
+        )
 
 # --- Список админов ---
 ADMINS = {216453}
@@ -347,8 +354,9 @@ async def process_checkin_photo(message: Message, state: FSMContext):
     # Follow-up сообщение с результатом
     await bot.send_message(
         chat_id=message.chat.id,
-        text=f"Чек-ин с селфи засчитан! +1 грабля. Фото улетело к админам, спасибо! 👍\nВсего граблей: {balance}",
-        reply_markup=get_main_kb(user)
+        text=f"Чек-ин с селфи засчитан! Спасибо!\n+1 грабля\n\n<b>Всего граблей:</b> {balance}",
+        reply_markup=get_main_kb(user),
+        parse_mode="HTML"
     )
     # Удаляем сообщение 'Бот думает...'
     try:
