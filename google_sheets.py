@@ -154,4 +154,13 @@ def update_user(telegram_id: int, data: Dict[str, Any]):
     # Определяем диапазон для обновления
     start_col = gspread.utils.rowcol_to_a1(1, 1)[0]
     end_col = gspread.utils.rowcol_to_a1(1, len(header_mapping))[0]
-    ws.update(f'{start_col}{row_idx}:{end_col}{row_idx}', [row]) 
+    ws.update(f'{start_col}{row_idx}:{end_col}{row_idx}', [row])
+
+def delete_user_by_telegram_id(telegram_id: int):
+    ws = get_sheet()
+    header_mapping = get_header_mapping(ws)
+    row_idx = find_user_row(ws, telegram_id, header_mapping)
+    if row_idx:
+        ws.delete_rows(row_idx)
+        return True
+    return False 

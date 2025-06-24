@@ -10,7 +10,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from datetime import datetime, timedelta
-from google_sheets import get_sheet, row_to_user, upload_photo_to_drive, COLUMNS
+from google_sheets import get_sheet, row_to_user, upload_photo_to_drive, COLUMNS, delete_user_by_telegram_id
 import gspread
 # --- Для вебхуков ---
 import logging
@@ -535,9 +535,13 @@ async def cmd_delete(message: Message, **kwargs):
     if not user:
         await message.answer(f"Пользователь {args[1]} не найден или у него не установлен username.")
         return
-    # Удаляем из кэша и (опционально) из таблицы
-    delete_user_by_username(username)
-    await message.answer(f"Пользователь @{username} удалён из базы и его прогресс сброшен. (Источник: {source})")
+    # Удаляем из кэша и из таблицы
+    deleted_cache = delete_user_by_username(username)
+    deleted_sheet = False
+    if user:
+        deleted_sheet = delete_user_by_telegram_id(int(user['Telegram ID']))
+    load_users_cache()
+    await message.answer(f"Пользователь @{username} удалён из базы (кэш: {deleted_cache}, таблица: {deleted_sheet}). Прогресс сброшен. (Источник: {source})")
 
 @dp.message(Command("admin"))
 async def cmd_admin(message: Message):
