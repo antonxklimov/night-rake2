@@ -151,7 +151,7 @@ async def sync_users_cache():
 
 # Условия для статуса "Резидент"
 CONDITIONS = [
-    "Пришёл хотя бы раз",
+    "Пришёл минимум один раз",
     "Привёл друга",
     "История из зала",
     "Подготовленное выступление",
@@ -161,10 +161,10 @@ CONDITIONS = [
 
 # Награды
 REWARDS = [
-    (1, "Можно поесть с кейтеринга"),
-    (5, "Бронь места в первом ряду (5 мест)"),
-    (10, "Пицца с собой"),
-    (15, "Футболка или худи")
+    (1, "Добро пожаловать к кейтерингу! 😋"),
+    (5, "Бронь места в первом ряду (5 мест) 💺"),
+    (10, "Пицца с собой 🍕"),
+    (15, "Футболка или худи 👕")
 ]
 
 # FSM для чек-ина с фото
@@ -178,9 +178,9 @@ dp = Dispatcher(storage=storage)
 # Главная клавиатура
 main_kb = ReplyKeyboardMarkup(
     keyboard=[
-        [KeyboardButton(text="Зачекиниться")],
-        [KeyboardButton(text="Прогресс")],
-        [KeyboardButton(text="Баланс")]
+        [KeyboardButton(text="Зачекиниться ✔️")],
+        [KeyboardButton(text="Прогресс ✏️")],
+        [KeyboardButton(text="Баланс 🏦")]
     ],
     resize_keyboard=True
 )
@@ -277,7 +277,7 @@ async def cmd_checkin(message: Message, state: FSMContext):
     user_id = message.from_user.id
     user = get_user(user_id)
     if not user:
-        await message.answer("Сначала напиши /start!", reply_markup=main_kb)
+        await message.answer("Сначала запусти бота!  /start!", reply_markup=main_kb)
         return
     visits = parse_visits(user['Даты посещений'])
     today = datetime.now().date()
@@ -301,11 +301,11 @@ async def process_checkin_photo(message: Message, state: FSMContext):
     user_id = message.from_user.id
     user = get_user(user_id)
     if not user:
-        await message.answer("Сначала напиши /start!", reply_markup=main_kb)
+        await message.answer("Сначала запусти бота!  /start!", reply_markup=main_kb)
         await state.clear()
         return
     if not message.photo:
-        await message.answer("Пожалуйста, пришли именно фото!")
+        await message.answer("Пожалуйста, пришли именно фото! 📷")
         return
     # Сохраняем фото локально
     photo = message.photo[-1]
@@ -336,7 +336,7 @@ async def process_checkin_photo(message: Message, state: FSMContext):
         keyboard=[[KeyboardButton(text="Прогресс")]],
         resize_keyboard=True
     )
-    await message.answer(f"Чек-ин с селфи засчитан! +1 грабля. Фото обрабатывается, всё ок 👍\nВсего грабель: {balance}", reply_markup=kb)
+    await message.answer(f"Чек-ин с селфи засчитан! +1 грабля. Фото улетело к админам, спасибо! 👍\nВсего граблей: {balance}", reply_markup=kb)
     await state.clear()
     # Загрузка фото в Google Drive и обновление ссылки — в фоне
     await _upload_photo_and_update_user(user_id, local_path)
@@ -346,14 +346,14 @@ async def cmd_balance(message: Message):
     user_id = message.from_user.id
     user = get_user(user_id)
     if not user:
-        await message.answer("Сначала напиши /start!", reply_markup=main_kb)
+        await message.answer("Сначала запусти бота!  /start!", reply_markup=main_kb)
         return
     conds = get_conditions(user)
     to_next, reward = next_reward(int(user['Баллы']))
-    status = "Резидент Граблей! 🎖" if all(conds) else "Почётный гость"
+    status = "Резидент Граблей! 🎖" if all(conds) else "Почётный гость 💫"
     text = (
         f"<b>Баланс</b>: {user['Баллы']}\n"
-        f"{f'<b>До следующей награды</b>: {to_next} — {reward}' if to_next else 'Ты собрал все награды!'}\n"
+        f"{f'<b>До следующей награды</b>: {to_next} — {reward}' if to_next else 'Ты собрал все награды! ❤️'}\n"
         f"<b>Статус</b>: {status}"
     )
     await message.answer(text, reply_markup=get_main_kb(user), parse_mode="HTML")
@@ -363,7 +363,7 @@ async def cmd_progress(message: Message):
     user_id = message.from_user.id
     user = get_user(user_id)
     if not user:
-        await message.answer("Сначала напиши /start!", reply_markup=main_kb)
+        await message.answer("Сначала запусти бота!  /start!", reply_markup=main_kb)
         return
     conds = get_conditions(user)
     text = "\n".join([
@@ -371,6 +371,7 @@ async def cmd_progress(message: Message):
     ])
     visits = ", ".join([str(d) for d in parse_visits(user['Даты посещений'])])
     await message.answer(
+        "Если хочешь обновить прогресс — сначала зачекинься! ✔️\n\n"
         f"<b>Твой прогресс</b>:\n{text}\n\n<b>Даты визитов</b>: {visits if visits else '—'}",
         reply_markup=get_main_kb(user),
         parse_mode="HTML"
@@ -389,7 +390,7 @@ async def cmd_progress_buttons(message: Message):
     user_id = message.from_user.id
     user = get_user(user_id)
     if not user:
-        await message.answer("Сначала напиши /start!", reply_markup=main_kb)
+        await message.answer("Сначала запусти бота!  /start!", reply_markup=main_kb)
         return
     conds = get_conditions(user)
     text = "\n".join([
@@ -399,7 +400,8 @@ async def cmd_progress_buttons(message: Message):
     # Если не было чек-ина — не показываем остальные кнопки
     if not conds[0]:
         await message.answer(
-            f"<b>Твой прогресс</b>:\n{text}\n\n<b>Даты визитов</b>: {visits if visits else '—'}\n\nЕсли хочешь обновить прогресс — сначала зачекинься!",
+            "Если хочешь обновить прогресс — сначала зачекинься! ✔️\n\n"
+            f"<b>Твой прогресс</b>:\n{text}\n\n<b>Даты визитов</b>: {visits if visits else '—'}",
             reply_markup=get_main_kb(user),
             parse_mode="HTML"
         )
@@ -415,9 +417,10 @@ async def cmd_progress_buttons(message: Message):
     if not conds[4]:
         buttons.append([KeyboardButton(text="Фото с табличкой")])
     if buttons:
-        buttons.append([KeyboardButton(text="Назад к меню")])
+        buttons.append([KeyboardButton(text="← Назад в меню")])
     kb = ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True) if buttons else get_main_kb(user)
     await message.answer(
+        "Если хочешь обновить прогресс — сначала зачекинься! ✔️\n\n"
         f"<b>Твой прогресс</b>:\n{text}\n\n<b>Даты визитов</b>: {visits if visits else '—'}",
         reply_markup=kb,
         parse_mode="HTML"
@@ -435,10 +438,10 @@ async def handle_progress_button(message: Message):
 async def handle_balance_button(message: Message):
     await cmd_balance(message)
 
-@dp.message(lambda m: m.text == "Назад к меню")
+@dp.message(lambda m: m.text == "← Назад в меню")
 async def handle_back_to_menu(message: Message):
     user = get_user(message.from_user.id)
-    await message.answer("Главное меню:", reply_markup=get_main_kb(user))
+    await message.answer("Окей, возвращаемся в меню...", reply_markup=get_main_kb(user))
 
 @dp.message(lambda m: m.text == "Привёл друга")
 async def handle_friend_brought(message: Message):
@@ -452,7 +455,7 @@ async def handle_friend_brought(message: Message):
         update_user(user_id, user)
         await message.answer("Привёл друга засчитано! +1 грабля 🏅", reply_markup=get_main_kb(user))
     else:
-        await message.answer("Это уже засчитано!", reply_markup=get_main_kb(user))
+        await message.answer("Уже засчитано! 😕", reply_markup=get_main_kb(user))
     await cmd_progress_buttons(message)
 
 @dp.message(lambda m: m.text == "История из зала")
@@ -467,7 +470,7 @@ async def handle_story(message: Message):
         update_user(user_id, user)
         await message.answer("История из зала засчитано! +1 грабля 🏅", reply_markup=get_main_kb(user))
     else:
-        await message.answer("Это уже засчитано!", reply_markup=get_main_kb(user))
+        await message.answer("Уже засчитано! 😕", reply_markup=get_main_kb(user))
     await cmd_progress_buttons(message)
 
 @dp.message(lambda m: m.text == "Подготовленное выступление")
@@ -482,7 +485,7 @@ async def handle_performance(message: Message):
         update_user(user_id, user)
         await message.answer("Выступление засчитано! +2 грабли 🎤", reply_markup=get_main_kb(user))
     else:
-        await message.answer("Это уже засчитано!", reply_markup=get_main_kb(user))
+        await message.answer("Уже засчитано! 😕", reply_markup=get_main_kb(user))
     await cmd_progress_buttons(message)
 
 @dp.message(lambda m: m.text == "Фото с табличкой / с другом" or m.text == "Фото с табличкой")
@@ -497,7 +500,7 @@ async def handle_photo_with_sign(message: Message):
         update_user(user_id, user)
         await message.answer("Фото с табличкой засчитано! +1 грабля 🏅", reply_markup=get_main_kb(user))
     else:
-        await message.answer("Это уже засчитано!", reply_markup=get_main_kb(user))
+        await message.answer("Уже засчитано! 😕", reply_markup=get_main_kb(user))
     await cmd_progress_buttons(message)
 
 @dp.message(Command("delete"))
@@ -526,7 +529,7 @@ async def cmd_admin(message: Message):
     if message.from_user.id not in ADMINS:
         return
     text = (
-        "<b>Админ-команды:</b>\n"
+        "<b>Админ-команды:</b>\n\n"
         "/add @username N — добавить N баллов участнику\n"
         "/check @username — посмотреть участника\n"
         "/broadcast текст — рассылка всем участникам\n"
