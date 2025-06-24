@@ -455,7 +455,39 @@ async def handle_checkin_button(message: Message, state: FSMContext):
 
 @dp.message(lambda m: m.text == "Прогресс ✏️")
 async def handle_progress_button(message: Message):
-    await cmd_progress_buttons(message)
+    user_id = message.from_user.id
+    user = get_user(user_id)
+    conds = get_conditions(user)
+    text = "\n".join([
+        f"{'✅' if done else '❌'} {cond}" for done, cond in zip(conds, CONDITIONS)
+    ])
+    visits = ", ".join([str(d) for d in parse_visits(user['Даты посещений'])])
+    if not conds[0]:
+        await message.answer(
+            "Если хочешь обновить прогресс — сначала зачекинься! ✔️\n\n"
+            f"<b>Твой прогресс</b>:\n{text}\n\n<b>Даты визитов</b>: {visits if visits else '—'}",
+            reply_markup=get_main_kb(user),
+            parse_mode="HTML"
+        )
+        return
+    # Кнопки для условий 2-5 + Назад к меню
+    buttons = []
+    if not conds[1]:
+        buttons.append([KeyboardButton(text="Привёл друга")])
+    if not conds[2]:
+        buttons.append([KeyboardButton(text="История из зала")])
+    if not conds[3]:
+        buttons.append([KeyboardButton(text="Подготовленное выступление")])
+    if not conds[4]:
+        buttons.append([KeyboardButton(text="Фото с табличкой")])
+    if buttons:
+        buttons.append([KeyboardButton(text="← Назад в меню")])
+    kb = ReplyKeyboardMarkup(keyboard=buttons, resize_keyboard=True) if buttons else get_main_kb(user)
+    await message.answer(
+        f"<b>Твой прогресс</b>:\n{text}\n\n<b>Даты визитов</b>: {visits if visits else '—'}",
+        reply_markup=kb,
+        parse_mode="HTML"
+    )
 
 @dp.message(lambda m: m.text == "Баланс 🏦")
 async def handle_balance_button(message: Message):
@@ -479,7 +511,6 @@ async def handle_friend_brought(message: Message):
         await message.answer("Привёл друга засчитано! +1 грабля 🏅", reply_markup=get_main_kb(user))
     else:
         await message.answer("Уже засчитано! 😕", reply_markup=get_main_kb(user))
-    await cmd_progress_buttons(message)
 
 @dp.message(lambda m: m.text == "История из зала")
 async def handle_story(message: Message):
@@ -494,7 +525,6 @@ async def handle_story(message: Message):
         await message.answer("История из зала засчитано! +1 грабля 🏅", reply_markup=get_main_kb(user))
     else:
         await message.answer("Уже засчитано! 😕", reply_markup=get_main_kb(user))
-    await cmd_progress_buttons(message)
 
 @dp.message(lambda m: m.text == "Подготовленное выступление")
 async def handle_performance(message: Message):
@@ -509,7 +539,6 @@ async def handle_performance(message: Message):
         await message.answer("Выступление засчитано! +2 грабли 🎤", reply_markup=get_main_kb(user))
     else:
         await message.answer("Уже засчитано! 😕", reply_markup=get_main_kb(user))
-    await cmd_progress_buttons(message)
 
 @dp.message(lambda m: m.text == "Фото с табличкой / с другом" or m.text == "Фото с табличкой")
 async def handle_photo_with_sign(message: Message):
@@ -524,7 +553,6 @@ async def handle_photo_with_sign(message: Message):
         await message.answer("Фото с табличкой засчитано! +1 грабля 🏅", reply_markup=get_main_kb(user))
     else:
         await message.answer("Уже засчитано! 😕", reply_markup=get_main_kb(user))
-    await cmd_progress_buttons(message)
 
 @dp.message(Command("delete"))
 async def cmd_delete(message: Message):
