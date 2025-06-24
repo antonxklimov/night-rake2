@@ -11,6 +11,7 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from datetime import datetime, timedelta
 from google_sheets import get_sheet, row_to_user, upload_photo_to_drive, COLUMNS
+import gspread
 
 # API_TOKEN = "7427155199:AAEqoEJw71PwOdnGFCQVLNV8ueskJ3gglBo"
 API_TOKEN = os.environ.get("TELEGRAM_API_TOKEN")
@@ -61,10 +62,29 @@ def get_user_by_username_anywhere(username):
 async def sync_users_cache():
     while True:
         ws = get_sheet()
-        values = [[user.get(col, '') for col in COLUMNS] for user in users_cache.values()]
-        ws.resize(rows=1)
-        if values:
-            ws.append_rows(values)
+        from google_sheets import get_header_mapping, find_user_row, update_user, add_user
+        header_mapping = get_header_mapping(ws)
+        records = ws.get_all_values()
+        # Сопоставление Telegram ID -> (row_idx, row_dict)
+        sheet_users = {}
+        for idx, row in enumerate(records[1:], start=2):  # первая строка — заголовки
+            user = row_to_user(row, header_mapping)
+            sheet_users[user['Telegram ID']] = (idx, user)
+        # Обновить существующих и добавить новых
+        for telegram_id, cache_user in users_cache.items():
+            sheet_entry = sheet_users.get(telegram_id)
+            if sheet_entry:
+                idx, sheet_user = sheet_entry
+                # Если данные отличаются — обновить
+                if any(str(cache_user.get(col, '')) != str(sheet_user.get(col, '')) for col in COLUMNS):
+                    row = [cache_user.get(col, '') for col in COLUMNS]
+                    start_col = gspread.utils.rowcol_to_a1(1, 1)[0]
+                    end_col = gspread.utils.rowcol_to_a1(1, len(header_mapping))[0]
+                    ws.update(f'{start_col}{idx}:{end_col}{idx}', [row])
+            else:
+                # Добавить нового пользователя
+                add_user(cache_user['Telegram ID'], cache_user.get('Имя', ''), cache_user.get('Никнейм', ''))
+                # После добавления можно обновить остальные поля, если нужно
         print(f"[SYNC] Users cache synced at {datetime.now()}")
         await asyncio.sleep(15)  # 15 секунд
 
