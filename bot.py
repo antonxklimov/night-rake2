@@ -313,6 +313,8 @@ async def process_checkin_photo(message: Message, state: FSMContext):
     file_path = file.file_path
     local_path = f"checkin_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
     await bot.download_file(file_path, local_path)
+    # Отправляем быстрое сообщение о том, что бот думает
+    thinking_msg = await message.answer("Бот думает... ⌛")
     # Обновляем пользователя в кэше (без ссылки на фото)
     visits = parse_visits(user['Даты посещений'])
     today = datetime.now().date()
@@ -332,14 +334,24 @@ async def process_checkin_photo(message: Message, state: FSMContext):
     user['Баллы'] = balance
     user['Даты посещений'] = visits_to_str(visits)
     update_user(user_id, user)
+    await state.clear()
+    # Долгая операция: загрузка фото и обновление ссылки
+    await _upload_photo_and_update_user(user_id, local_path)
+    # Follow-up сообщение с результатом
     kb = ReplyKeyboardMarkup(
         keyboard=[[KeyboardButton(text="Прогресс")]],
         resize_keyboard=True
     )
-    await message.answer(f"Чек-ин с селфи засчитан! +1 грабля. Фото улетело к админам, спасибо! 👍\nВсего граблей: {balance}", reply_markup=kb)
-    await state.clear()
-    # Загрузка фото в Google Drive и обновление ссылки — в фоне
-    await _upload_photo_and_update_user(user_id, local_path)
+    await bot.send_message(
+        chat_id=message.chat.id,
+        text=f"Чек-ин с селфи засчитан! +1 грабля. Фото улетело к админам, спасибо! 👍\nВсего граблей: {balance}",
+        reply_markup=kb
+    )
+    # Удаляем сообщение 'Бот думает...'
+    try:
+        await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+    except Exception:
+        pass
 
 @dp.message(Command("баланс"))
 async def cmd_balance(message: Message):
