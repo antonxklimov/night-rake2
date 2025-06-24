@@ -644,16 +644,30 @@ async def cmd_residentify(message: Message, **kwargs):
 # Appwrite Function entry point
 async def main(context):
     try:
-        # Логируем детали запроса
         context.log(f"Received request: {context.req.method} {context.req.path}")
-        request_body = context.req_body  # Appwrite передаёт dict
+        context.log(f"Context dir: {dir(context)}")
+        if hasattr(context, 'req'):
+            context.log(f"Context.req dir: {dir(context.req)}")
+        # Универсально получить тело запроса
+        request_body = None
+        if hasattr(context, 'req_body'):
+            request_body = context.req_body
+        elif hasattr(context, 'req') and hasattr(context.req, 'body'):
+            request_body = context.req.body
+        elif hasattr(context, 'data'):
+            request_body = context.data
+        elif hasattr(context, 'req') and hasattr(context.req, 'json'):
+            # Возможно, это async-метод
+            try:
+                request_body = await context.req.json()
+            except Exception as e:
+                context.error(f"context.req.json() error: {e}")
+        if request_body is None:
+            context.error("Не удалось найти тело запроса!")
+            return context.res.json({"error": "No request body found"}, 400)
         context.log(f"Request body: {request_body}")
-
-        # Парсим Update
         update = Update.model_validate(request_body)
         await dp.feed_update(bot, update)
-
-        # Возвращаем успешный ответ Telegram
         return context.res.json({"status": "ok"})
     except Exception as e:
         context.error(f"Error: {e}")
