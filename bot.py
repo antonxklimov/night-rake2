@@ -53,6 +53,50 @@ def load_users_cache():
         user = row_to_user(row, header_mapping)
         users_cache[user['Telegram ID']] = user
 
+# --- Получить пользователя: сначала кэш, потом Google Sheets ---
+def get_user(user_id):
+    user = users_cache.get(str(user_id))
+    if user is None:
+        from google_sheets import get_user as gs_get_user
+        user = gs_get_user(user_id)
+        if user:
+            users_cache[str(user_id)] = user
+    return user
+
+# --- Добавить пользователя ---
+def add_user(user_id, name, username=""):
+    from google_sheets import add_user as gs_add_user, get_user as gs_get_user
+    gs_add_user(user_id, name, username)
+    user = gs_get_user(user_id)
+    if user:
+        users_cache[str(user_id)] = user
+
+# --- Обновить пользователя ---
+def update_user(user_id, data):
+    from google_sheets import update_user as gs_update_user, get_user as gs_get_user
+    gs_update_user(user_id, data)
+    user = gs_get_user(user_id)
+    if user:
+        users_cache[str(user_id)] = user
+
+# --- Удалить пользователя из кэша ---
+def delete_user_by_username(username):
+    for user_id, user in list(users_cache.items()):
+        if user.get('Никнейм', '').lower() == username.lower():
+            del users_cache[user_id]
+            return True
+    return False
+
+# --- Загрузка фото и обновление пользователя (синхронно) ---
+async def _upload_photo_and_update_user(user_id, local_path):
+    from google_sheets import upload_photo_to_drive
+    drive_link = upload_photo_to_drive(local_path, os.path.basename(local_path))
+    os.remove(local_path)
+    user = get_user(user_id)
+    if user:
+        user['Ссылка на фото'] = drive_link
+        update_user(user_id, user)
+
 # --- Универсальный поиск пользователя по никнейму: сначала кэш, потом Google Sheets ---
 def get_user_by_username_anywhere(username):
     username = username.lstrip('@')
@@ -195,30 +239,6 @@ def get_main_kb(user):
     else:
         return main_kb
 
-# --- Вспомогательные функции для работы с кэшем ---
-def get_user(user_id):
-    return users_cache.get(str(user_id))
-
-def add_user(user_id, name, username=""):
-    users_cache[str(user_id)] = {
-        'Telegram ID': str(user_id),
-        'Имя': name,
-        'Никнейм': username,
-        'Баллы': 0,
-        'Даты посещений': '',
-        'Фото': 'no',
-        'Ссылка на фото': '',
-        'Фото с табличкой': 'no',
-        'История': 'no',
-        'Выступление': 'no',
-        'Привел друга': 'no',
-        '3 визита подряд': 'no',
-        'Резидент': 'no',
-    }
-
-def update_user(user_id, data):
-    users_cache[str(user_id)] = data
-
 # --- Список админов ---
 ADMINS = {216453}
 
@@ -230,31 +250,6 @@ def get_user_by_username(username):
             return user
     return None
 
-def delete_user_by_username(username):
-    for user_id, user in list(users_cache.items()):
-        if user.get('Никнейм', '').lower() == username.lower():
-            del users_cache[user_id]
-            return True
-    return False
-
-# --- Обновление никнейма пользователя при любом действии ---
-async def update_nickname_on_action(message: Message):
-    user_id = message.from_user.id
-    user = get_user(user_id)
-    if user:
-        username = message.from_user.username or ""
-        if user.get('Никнейм', '') != username:
-            user['Никнейм'] = username
-            update_user(user_id, user)
-
-# --- Декоратор для обновления никнейма ---
-def nickname_updater(handler):
-    async def wrapper(message: Message, *args, **kwargs):
-        await update_nickname_on_action(message)
-        return await handler(message, *args, **kwargs)
-    return wrapper
-
-# /start — сразу регистрация и показ двух кнопок
 @dp.message(Command("start"))
 @nickname_updater
 async def cmd_start(message: Message, **kwargs):
@@ -278,7 +273,6 @@ async def cmd_start(message: Message, **kwargs):
     )
     await message.answer(text, reply_markup=get_main_kb(user))
 
-# /чек-ин
 @dp.message(Command("чек-ин"))
 async def cmd_checkin(message: Message, state: FSMContext):
     user_id = message.from_user.id
@@ -346,18 +340,8 @@ async def process_checkin_photo(message: Message, state: FSMContext):
     await message.answer(f"Чек-ин с селфи засчитан! +1 грабля. Фото обрабатывается, всё ок 👍\nВсего грабель: {balance}", reply_markup=kb)
     await state.clear()
     # Загрузка фото в Google Drive и обновление ссылки — в фоне
-    asyncio.create_task(_upload_photo_and_update_user(user_id, local_path))
+    await _upload_photo_and_update_user(user_id, local_path)
 
-async def _upload_photo_and_update_user(user_id, local_path):
-    from google_sheets import upload_photo_to_drive
-    drive_link = upload_photo_to_drive(local_path, os.path.basename(local_path))
-    os.remove(local_path)
-    user = get_user(user_id)
-    if user:
-        user['Ссылка на фото'] = drive_link
-        update_user(user_id, user)
-
-# /баланс
 @dp.message(Command("баланс"))
 async def cmd_balance(message: Message):
     user_id = message.from_user.id
@@ -375,7 +359,6 @@ async def cmd_balance(message: Message):
     )
     await message.answer(text, reply_markup=get_main_kb(user), parse_mode="HTML")
 
-# /прогресс
 @dp.message(Command("прогресс"))
 async def cmd_progress(message: Message):
     user_id = message.from_user.id
@@ -394,17 +377,14 @@ async def cmd_progress(message: Message):
         parse_mode="HTML"
     )
 
-# /checkin (дублирует /чек-ин)
 @dp.message(Command("checkin"))
 async def cmd_checkin_alias(message: Message):
     await cmd_checkin(message)
 
-# /balance (дублирует /баланс)
 @dp.message(Command("balance"))
 async def cmd_balance_alias(message: Message):
     await cmd_balance(message)
 
-# /progress (дублирует /прогресс, но с кнопками)
 @dp.message(Command("progress"))
 async def cmd_progress_buttons(message: Message):
     user_id = message.from_user.id
@@ -561,7 +541,6 @@ async def cmd_admin(message: Message):
 async def cmd_myid(message: Message):
     await message.answer(f"Ваш Telegram ID: {message.from_user.id}")
 
-# /add @username N — добавить N баллов участнику
 @dp.message(Command("add"))
 @nickname_updater
 async def cmd_add(message: Message, **kwargs):
@@ -584,7 +563,6 @@ async def cmd_add(message: Message, **kwargs):
     update_user(user['Telegram ID'], user)
     await message.answer(f"@{username}: +{n} баллов. Теперь {user['Баллы']} баллов. (Источник: {source})")
 
-# /check @username — посмотреть участника
 @dp.message(Command("check"))
 @nickname_updater
 async def cmd_check(message: Message, **kwargs):
@@ -610,7 +588,6 @@ async def cmd_check(message: Message, **kwargs):
     )
     await message.answer(text, parse_mode="HTML")
 
-# /broadcast текст — рассылка всем участникам
 @dp.message(Command("broadcast"))
 @nickname_updater
 async def cmd_broadcast(message: Message, **kwargs):
@@ -630,7 +607,6 @@ async def cmd_broadcast(message: Message, **kwargs):
             pass
     await message.answer(f"Рассылка завершена. Отправлено {count} пользователям.")
 
-# /residentify @username — присвоить статус резидента
 @dp.message(Command("residentify"))
 @nickname_updater
 async def cmd_residentify(message: Message, **kwargs):
@@ -649,7 +625,6 @@ async def cmd_residentify(message: Message, **kwargs):
     update_user(user['Telegram ID'], user)
     await message.answer(f"@{username} теперь резидент! (Источник: {source})")
 
-# Appwrite Function entry point
 async def main(context):
     try:
         context.log(f"Received request: {context.req.method} {context.req.path}")
