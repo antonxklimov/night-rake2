@@ -18,7 +18,7 @@ COLUMNS = [
 
 # Авторизация и подключение к таблице
 def get_sheet():
-    creds = Credentials.from_service_account_file('credentials.json', scopes=[
+    creds = Credentials.from_service_account_file('/tmp/credentials.json', scopes=[
         'https://www.googleapis.com/auth/spreadsheets',
         'https://www.googleapis.com/auth/drive',
     ])
@@ -29,7 +29,7 @@ def get_sheet():
 
 # Авторизация для Google Drive
 def get_drive_service():
-    creds = Credentials.from_service_account_file('credentials.json', scopes=[
+    creds = Credentials.from_service_account_file('/tmp/credentials.json', scopes=[
         'https://www.googleapis.com/auth/drive',
     ])
     return build('drive', 'v3', credentials=creds)

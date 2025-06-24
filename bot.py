@@ -32,9 +32,13 @@ WEBHOOK_URL = WEBHOOK_BASE_URL.rstrip("/") + WEBHOOK_PATH
 USE_WEBHOOK = os.environ.get("USE_WEBHOOK", "0") == "1"
 
 # --- Для деплоя через Appwrite: создаём credentials.json из секрета ---
+CREDENTIALS_PATH = "/tmp/credentials.json"
 if os.environ.get("GOOGLE_CREDENTIALS"):
-    with open("credentials.json", "w") as f:
+    with open(CREDENTIALS_PATH, "w") as f:
         f.write(os.environ["GOOGLE_CREDENTIALS"])
+    print(f"[INFO] credentials.json written to {CREDENTIALS_PATH}")
+else:
+    print("[WARN] GOOGLE_CREDENTIALS env var not set!")
 
 # --- КЭШ пользователей ---
 users_cache = {}
