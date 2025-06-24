@@ -73,7 +73,11 @@ def add_user(user_id, name, username=""):
 
 # --- Обновить пользователя ---
 def update_user(user_id, data):
-    from google_sheets import update_user as gs_update_user, get_user as gs_get_user
+    from google_sheets import update_user as gs_update_user, get_user as gs_get_user, COLUMNS
+    # Гарантируем, что все ключи есть
+    for col in COLUMNS:
+        if col not in data:
+            data[col] = ''
     gs_update_user(user_id, data)
     user = gs_get_user(user_id)
     if user:
