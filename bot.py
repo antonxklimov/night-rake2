@@ -255,6 +255,8 @@ async def cmd_start(message: Message):
     user_id = message.from_user.id
     name = message.from_user.full_name
     username = message.from_user.username or ""
+    # Быстрый UX: отправляем сообщение о запуске
+    thinking_msg = await message.answer("Привет! Завожу мотор... 🏎️")
     user = get_user(user_id)
     if not user:
         add_user(user_id, name, username)
@@ -270,6 +272,11 @@ async def cmd_start(message: Message):
         "За баллы — футболка, пицца и место в первом ряду.\n"
         "Всё просто."
     )
+    # Удаляем thinking message
+    try:
+        await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+    except Exception:
+        pass
     await message.answer(text, reply_markup=get_main_kb(user))
 
 @dp.message(Command("чек-ин"))
