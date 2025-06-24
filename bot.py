@@ -23,8 +23,10 @@ users_cache = {}
 def load_users_cache():
     ws = get_sheet()
     records = ws.get_all_values()
+    from google_sheets import get_header_mapping
+    header_mapping = get_header_mapping(ws)
     for row in records[1:]:
-        user = row_to_user(row)
+        user = row_to_user(row, header_mapping)
         users_cache[user['Telegram ID']] = user
 
 # --- Универсальный поиск пользователя по никнейму: сначала кэш, потом Google Sheets ---
@@ -37,9 +39,16 @@ def get_user_by_username_anywhere(username):
     # 2. Поиск в Google Sheets
     ws = get_sheet()
     records = ws.get_all_values()
+    from google_sheets import get_header_mapping
+    header_mapping = get_header_mapping(ws)
+    norm_nickname = None
+    for code_key in COLUMNS:
+        if 'никнейм' in code_key.lower():
+            norm_nickname = get_header_mapping(ws).get(normalize_header(code_key), (None, 1))[1]
+            break
     for row in records[1:]:
-        if len(row) > 1 and row[1].lower() == username.lower():
-            return row_to_user(row), 'sheet'
+        if len(row) > norm_nickname and row[norm_nickname].lower() == username.lower():
+            return row_to_user(row, header_mapping), 'sheet'
     return None, None
 
 # --- sync_users_cache: уменьшить интервал до 15 секунд ---
