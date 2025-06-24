@@ -276,6 +276,11 @@ async def cmd_start(message: Message):
     if not user:
         add_user(user_id, name, username)
         user = get_user(user_id)
+        # Инициализируем новые поля сразу
+        user['last_checkin_ts'] = ''
+        user['last_condition_ts'] = ''
+        user['conditions_after_checkin'] = '0'
+        update_user(user_id, user)
     else:
         # Обновляем имя и никнейм, если пользователь уже есть
         user['Имя'] = name
