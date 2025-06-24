@@ -438,15 +438,15 @@ async def cmd_progress_buttons(message: Message):
         parse_mode="HTML"
     )
 
-@dp.message(lambda m: m.text == "Зачекиниться")
+@dp.message(lambda m: m.text == "Зачекиниться ✔️")
 async def handle_checkin_button(message: Message, state: FSMContext):
     await cmd_checkin(message, state)
 
-@dp.message(lambda m: m.text == "Прогресс")
+@dp.message(lambda m: m.text == "Прогресс ✏️")
 async def handle_progress_button(message: Message):
     await cmd_progress_buttons(message)
 
-@dp.message(lambda m: m.text == "Баланс")
+@dp.message(lambda m: m.text == "Баланс 🏦")
 async def handle_balance_button(message: Message):
     await cmd_balance(message)
 
