@@ -1,3 +1,6 @@
+import sys
+import os
+sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
@@ -7,7 +10,6 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from datetime import datetime, timedelta
 from google_sheets import get_sheet, row_to_user, upload_photo_to_drive, COLUMNS
-import os
 
 # API_TOKEN = "7427155199:AAEqoEJw71PwOdnGFCQVLNV8ueskJ3gglBo"
 API_TOKEN = os.environ.get("TELEGRAM_API_TOKEN")
