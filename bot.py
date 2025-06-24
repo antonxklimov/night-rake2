@@ -256,7 +256,7 @@ async def cmd_start(message: Message):
     name = message.from_user.full_name
     username = message.from_user.username or ""
     # Быстрый UX: отправляем сообщение о запуске
-    thinking_msg = await message.answer("Привет! Завожу мотор... 🏎️")
+    thinking_msg = await message.answer("Завожу мотор... 🏎️")
     user = get_user(user_id)
     if not user:
         add_user(user_id, name, username)
