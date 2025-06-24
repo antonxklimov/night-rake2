@@ -5,7 +5,7 @@ print("Bot function started!")
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
-from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
+from aiogram.types import Message, ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove, Update
 from aiogram.fsm.context import FSMContext
 from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
@@ -15,6 +15,10 @@ import gspread
 # --- Для вебхуков ---
 import logging
 from aiohttp import web
+
+# Настройка логирования
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 # API_TOKEN = "7427155199:AAEqoEJw71PwOdnGFCQVLNV8ueskJ3gglBo"
 API_TOKEN = os.environ.get("TELEGRAM_API_TOKEN")
@@ -637,33 +641,20 @@ async def cmd_residentify(message: Message, **kwargs):
     update_user(user['Telegram ID'], user)
     await message.answer(f"@{username} теперь резидент! (Источник: {source})")
 
-async def main(context=None):
-    print("Bot function started!")
-    loop = asyncio.get_event_loop()
-    loop.create_task(sync_users_cache())
-    if USE_WEBHOOK:
-        # --- Запуск через вебхуки ---
-        app = web.Application()
+# Appwrite Function entry point
+async def main(context):
+    try:
+        # Логируем детали запроса
+        context.log(f"Received request: {context.req.method} {context.req.path}")
+        request_body = context.req_body  # Appwrite передаёт dict
+        context.log(f"Request body: {request_body}")
 
-        async def handle_webhook(request):
-            body = await request.read()
-            update = types.Update.model_validate_json(body)
-            await dp.feed_update(bot, update)
-            return web.Response()
+        # Парсим Update
+        update = Update.model_validate(request_body)
+        await dp.feed_update(bot, update)
 
-        app.router.add_post(WEBHOOK_PATH, handle_webhook)
-
-        # Вебхук регистрируется вручную, не вызываем set_webhook здесь
-        print(f"[WEBHOOK] Webhook URL: {WEBHOOK_URL}")
-
-        runner = web.AppRunner(app)
-        await runner.setup()
-        site = web.TCPSite(runner, "0.0.0.0", 8080)
-        print("[WEBHOOK] Starting aiohttp server on 0.0.0.0:8080 ...")
-        await site.start()
-        # Не завершать main
-        while True:
-            await asyncio.sleep(3600)
-    else:
-        # --- Обычный polling ---
-        await dp.start_polling(bot) 
+        # Возвращаем успешный ответ Telegram
+        return context.res.json({"status": "ok"})
+    except Exception as e:
+        context.error(f"Error: {e}")
+        return context.res.json({"error": str(e)}) 
