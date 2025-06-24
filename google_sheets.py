@@ -5,6 +5,7 @@ from googleapiclient.discovery import build
 from googleapiclient.http import MediaFileUpload
 import os
 import unicodedata
+import logging
 
 # Название таблицы и листа
 SPREADSHEET_ID = '1pozCL8pbOxpE8lRMA_EDzGkcsutDj6c36UA00TSyS_M'
@@ -13,7 +14,8 @@ DRIVE_FOLDER_ID = '1rAs1j1KuKOOuQyEp23OTJW6BEfOq2vuc'
 
 # Столбцы таблицы (должны совпадать с первой строкой в Google Sheets)
 COLUMNS = [
-    'Telegram ID', 'Никнейм', 'Имя', 'Баллы', 'Даты посещений', 'Фото', 'Ссылка на фото', 'Фото с табличкой', 'История', 'Выступление', 'Привел друга', 'Фото с другом', '3 визита подряд', 'Резидент'
+    'Telegram ID', 'Никнейм', 'Имя', 'Баллы', 'Даты посещений', 'Фото', 'Ссылка на фото', 'Фото с табличкой', 'История', 'Выступление', 'Привел друга', 'Фото с другом', '3 визита подряд', 'Резидент',
+    'last_checkin_ts', 'last_condition_ts', 'conditions_after_checkin'
 ]
 
 # Авторизация и подключение к таблице
@@ -129,6 +131,9 @@ def add_user(telegram_id: int, name: str, username: str = ""):
         'Фото с другом': '',
         '3 визита подряд': '',
         'Резидент': 'no',
+        'last_checkin_ts': '',
+        'last_condition_ts': '',
+        'conditions_after_checkin': '0',
     }
     row = [''] * len(header_mapping)
     for code_key, value in user_data.items():
@@ -155,6 +160,9 @@ def update_user(telegram_id: int, data: Dict[str, Any]):
     # Определяем диапазон для обновления
     start_col = gspread.utils.rowcol_to_a1(1, 1)[0]
     end_col = gspread.utils.rowcol_to_a1(1, len(header_mapping))[0]
+    logger = logging.getLogger(__name__)
+    logger.info(f"[gs.update_user] row_idx={row_idx} range={start_col}{row_idx}:{end_col}{row_idx} row={row}")
+    print(f"[gs.update_user] row_idx={row_idx} range={start_col}{row_idx}:{end_col}{row_idx} row={row}")
     ws.update(f'{start_col}{row_idx}:{end_col}{row_idx}', [row])
 
 def delete_user_by_telegram_id(telegram_id: int):

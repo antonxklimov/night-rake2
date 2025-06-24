@@ -17,8 +17,15 @@ import logging
 from aiohttp import web
 
 # Настройка логирования
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(message)s",
+    handlers=[
+        logging.StreamHandler()
+    ]
+)
 logger = logging.getLogger(__name__)
+logger.info("Bot started!")
 
 # API_TOKEN = "7427155199:AAEqoEJw71PwOdnGFCQVLNV8ueskJ3gglBo"
 API_TOKEN = os.environ.get("TELEGRAM_API_TOKEN")
@@ -78,6 +85,8 @@ def update_user(user_id, data):
     for col in COLUMNS:
         if col not in data:
             data[col] = ''
+    logger.info(f"[update_user] user_id={user_id} last_checkin_ts={data.get('last_checkin_ts')} last_condition_ts={data.get('last_condition_ts')} conditions_after_checkin={data.get('conditions_after_checkin')}")
+    print(f"[update_user] user_id={user_id} last_checkin_ts={data.get('last_checkin_ts')} last_condition_ts={data.get('last_condition_ts')} conditions_after_checkin={data.get('conditions_after_checkin')}")
     gs_update_user(user_id, data)
     user = gs_get_user(user_id)
     if user:
