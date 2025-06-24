@@ -12,11 +12,20 @@ from aiogram.fsm.storage.memory import MemoryStorage
 from datetime import datetime, timedelta
 from google_sheets import get_sheet, row_to_user, upload_photo_to_drive, COLUMNS
 import gspread
+# --- Для вебхуков ---
+import logging
+from aiohttp import web
 
 # API_TOKEN = "7427155199:AAEqoEJw71PwOdnGFCQVLNV8ueskJ3gglBo"
 API_TOKEN = os.environ.get("TELEGRAM_API_TOKEN")
 if not API_TOKEN:
     raise RuntimeError("TELEGRAM_API_TOKEN is not set in environment variables!")
+
+# --- Настройки вебхука ---
+WEBHOOK_PATH = "/webhook"
+WEBHOOK_BASE_URL = os.environ.get("WEBHOOK_BASE_URL", "https://685a75f4003afd31f1be.fra.appwrite.run")
+WEBHOOK_URL = WEBHOOK_BASE_URL.rstrip("/") + WEBHOOK_PATH
+USE_WEBHOOK = os.environ.get("USE_WEBHOOK", "0") == "1"
 
 # --- Для деплоя через Appwrite: создаём credentials.json из секрета ---
 if os.environ.get("GOOGLE_CREDENTIALS"):
@@ -632,4 +641,31 @@ async def main(context=None):
     print("Bot function started!")
     loop = asyncio.get_event_loop()
     loop.create_task(sync_users_cache())
-    await dp.start_polling(bot) 
+    if USE_WEBHOOK:
+        # --- Запуск через вебхуки ---
+        app = web.Application()
+
+        async def handle_webhook(request):
+            body = await request.read()
+            update = types.Update.model_validate_json(body)
+            await dp.feed_update(bot, update)
+            return web.Response()
+
+        app.router.add_post(WEBHOOK_PATH, handle_webhook)
+
+        # Установить вебхук у Telegram
+        await bot.set_webhook(WEBHOOK_URL, drop_pending_updates=True)
+        print(f"[WEBHOOK] Set webhook: {WEBHOOK_URL}")
+
+        # Запуск aiohttp-сервера
+        runner = web.AppRunner(app)
+        await runner.setup()
+        site = web.TCPSite(runner, "0.0.0.0", 8080)
+        print("[WEBHOOK] Starting aiohttp server on 0.0.0.0:8080 ...")
+        await site.start()
+        # Не завершать main
+        while True:
+            await asyncio.sleep(3600)
+    else:
+        # --- Обычный polling ---
+        await dp.start_polling(bot) 
