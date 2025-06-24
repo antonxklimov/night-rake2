@@ -1,6 +1,7 @@
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
+print("Bot function started!")
 import asyncio
 from aiogram import Bot, Dispatcher, types
 from aiogram.filters import Command
