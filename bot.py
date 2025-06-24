@@ -338,14 +338,10 @@ async def process_checkin_photo(message: Message, state: FSMContext):
     # Долгая операция: загрузка фото и обновление ссылки
     await _upload_photo_and_update_user(user_id, local_path)
     # Follow-up сообщение с результатом
-    kb = ReplyKeyboardMarkup(
-        keyboard=[[KeyboardButton(text="Прогресс")]],
-        resize_keyboard=True
-    )
     await bot.send_message(
         chat_id=message.chat.id,
         text=f"Чек-ин с селфи засчитан! +1 грабля. Фото улетело к админам, спасибо! 👍\nВсего граблей: {balance}",
-        reply_markup=kb
+        reply_markup=get_main_kb(user)
     )
     # Удаляем сообщение 'Бот думает...'
     try:
