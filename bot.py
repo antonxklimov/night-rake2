@@ -532,6 +532,11 @@ async def process_friend_photo(message: Message, state: FSMContext):
         return
     user_id = message.from_user.id
     user = get_user(user_id)
+    can_do, msg = can_perform_condition(user)
+    if not can_do:
+        await message.answer(msg or "Сначала зачекинься!", reply_markup=get_main_kb(user))
+        await state.clear()
+        return
     if not user:
         await message.answer("Сначала запусти бота!  /start!", reply_markup=get_main_kb(user))
         await state.clear()
@@ -594,6 +599,10 @@ async def handle_story(message: Message):
 async def handle_performance(message: Message):
     user_id = message.from_user.id
     user = get_user(user_id)
+    can_do, msg = can_perform_condition(user)
+    if not can_do:
+        await message.answer(msg or "Сначала зачекинься!", reply_markup=get_main_kb(user))
+        return
     conds = get_conditions(user)
     if not conds[3]:
         conds[3] = True
@@ -610,6 +619,10 @@ async def handle_performance(message: Message):
 async def handle_photo_with_sign(message: Message):
     user_id = message.from_user.id
     user = get_user(user_id)
+    can_do, msg = can_perform_condition(user)
+    if not can_do:
+        await message.answer(msg or "Сначала зачекинься!", reply_markup=get_main_kb(user))
+        return
     conds = get_conditions(user)
     if not conds[4]:
         conds[4] = True
