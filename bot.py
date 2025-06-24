@@ -608,10 +608,8 @@ async def cmd_residentify(message: Message, **kwargs):
     update_user(user['Telegram ID'], user)
     await message.answer(f"@{username} теперь резидент! (Источник: {source})")
 
-if __name__ == "__main__":
-    load_users_cache()
-    async def main():
-        loop = asyncio.get_event_loop()
-        loop.create_task(sync_users_cache())
-        await dp.start_polling(bot)
-    asyncio.run(main()) 
+async def main(context=None):
+    print("Bot function started!")
+    loop = asyncio.get_event_loop()
+    loop.create_task(sync_users_cache())
+    await dp.start_polling(bot) 
