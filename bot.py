@@ -351,6 +351,8 @@ async def process_checkin_photo(message: Message, state: FSMContext):
                 user['3 визита подряд'] = 'yes'
     user['Баллы'] = balance
     user['Даты посещений'] = visits_to_str(visits)
+    user['last_checkin_ts'] = datetime.now().isoformat()
+    user['conditions_after_checkin'] = '0'
     update_user(user_id, user)
     await state.clear()
     # Долгая операция: загрузка фото и обновление ссылки
@@ -545,6 +547,8 @@ async def process_friend_photo(message: Message, state: FSMContext):
         user['Фото с другом'] = drive_link
         user['Баллы'] = int(user['Баллы']) + 1
         user['Привел друга'] = 'yes'
+        user['last_condition_ts'] = datetime.now().isoformat()
+        user['conditions_after_checkin'] = str(int(user.get('conditions_after_checkin', '0')) + 1)
         update_user(user_id, user)
     await state.clear()
     await bot.send_message(
@@ -562,10 +566,16 @@ async def handle_story(message: Message):
     user_id = message.from_user.id
     user = get_user(user_id)
     conds = get_conditions(user)
+    can_do, msg = can_perform_condition(user)
+    if not can_do:
+        await message.answer(msg or "Сначала зачекинься!", reply_markup=get_main_kb(user))
+        return
     if not conds[2]:
         conds[2] = True
         user['Баллы'] = int(user['Баллы']) + 1
         user['История'] = 'yes'
+        user['last_condition_ts'] = datetime.now().isoformat()
+        user['conditions_after_checkin'] = str(int(user.get('conditions_after_checkin', '0')) + 1)
         update_user(user_id, user)
         await message.answer("История из зала засчитано! +1 грабля 🏅", reply_markup=get_main_kb(user))
     else:
@@ -580,6 +590,8 @@ async def handle_performance(message: Message):
         conds[3] = True
         user['Баллы'] = int(user['Баллы']) + 2
         user['Выступление'] = 'yes'
+        user['last_condition_ts'] = datetime.now().isoformat()
+        user['conditions_after_checkin'] = str(int(user.get('conditions_after_checkin', '0')) + 1)
         update_user(user_id, user)
         await message.answer("Выступление засчитано! +2 грабли 🎤", reply_markup=get_main_kb(user))
     else:
@@ -594,6 +606,8 @@ async def handle_photo_with_sign(message: Message):
         conds[4] = True
         user['Баллы'] = int(user['Баллы']) + 1
         user['Фото с табличкой'] = 'yes'
+        user['last_condition_ts'] = datetime.now().isoformat()
+        user['conditions_after_checkin'] = str(int(user.get('conditions_after_checkin', '0')) + 1)
         update_user(user_id, user)
         await message.answer("Фото с табличкой засчитано! +1 грабля 🏅", reply_markup=get_main_kb(user))
     else:
@@ -666,6 +680,8 @@ async def cmd_add(message: Message):
         await message.answer(f"У пользователя нет username. Операция невозможна.")
         return
     user['Баллы'] = int(user['Баллы']) + n
+    user['last_condition_ts'] = datetime.now().isoformat()
+    user['conditions_after_checkin'] = '0'
     update_user(user['Telegram ID'], user)
     await message.answer(f"@{username}: +{n} баллов. Теперь {user['Баллы']} баллов. (Источник: {source})")
 
@@ -725,6 +741,8 @@ async def cmd_residentify(message: Message):
         await message.answer(f"Пользователь {args[1]} не найден или у него не установлен username.")
         return
     user['Резидент'] = 'yes'
+    user['last_condition_ts'] = datetime.now().isoformat()
+    user['conditions_after_checkin'] = '0'
     update_user(user['Telegram ID'], user)
     await message.answer(f"@{username} теперь резидент! (Источник: {source})")
 
@@ -757,4 +775,29 @@ async def main(context):
         return context.res.json({"status": "ok"})
     except Exception as e:
         context.error(f"Error: {e}")
-        return context.res.json({"error": str(e)}) 
+        return context.res.json({"error": str(e)})
+
+# В каждом хендлере условия (кроме чек-ина) — проверяю таймаут
+TIMEOUT_MINUTES = 15
+TIMEOUT_MSG = "Ой-ой! Ты слишком быстро набираешь баллы, дай себе отдохнуть 😮‍💨\nПопробуй через некоторое время!"
+
+def can_perform_condition(user):
+    # Если нет чек-ина — нельзя
+    visits = parse_visits(user['Даты посещений'])
+    today = datetime.now().date()
+    if not (visits and visits[-1] == today):
+        return False, None
+    # Если после чек-ина не было ни одного условия — можно
+    if str(user.get('conditions_after_checkin', '0')) == '0':
+        return True, None
+    # Если уже было одно условие — проверяем таймаут
+    last_ts = user.get('last_condition_ts')
+    if not last_ts:
+        return True, None
+    try:
+        last_dt = datetime.fromisoformat(last_ts)
+    except Exception:
+        return True, None
+    if datetime.now() - last_dt < timedelta(minutes=TIMEOUT_MINUTES):
+        return False, TIMEOUT_MSG
+    return True, None 
