@@ -520,9 +520,15 @@ async def cmd_delete(message: Message):
         await message.answer("Используй: /delete @username или /delete username")
         return
     username = args[1].lstrip("@")
+    # Быстрый ответ админу
+    thinking_msg = await message.answer("Бот думает... ⌛")
     user, source = get_user_by_username_anywhere(username)
     if not user:
         await message.answer(f"Пользователь {args[1]} не найден или у него не установлен username.")
+        try:
+            await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+        except Exception:
+            pass
         return
     # Удаляем из кэша и из таблицы
     deleted_cache = delete_user_by_username(username)
@@ -531,6 +537,10 @@ async def cmd_delete(message: Message):
         deleted_sheet = delete_user_by_telegram_id(int(user['Telegram ID']))
     load_users_cache()
     await message.answer(f"Пользователь @{username} удалён из базы (кэш: {deleted_cache}, таблица: {deleted_sheet}). Прогресс сброшен. (Источник: {source})")
+    try:
+        await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+    except Exception:
+        pass
 
 @dp.message(Command("admin"))
 async def cmd_admin(message: Message):
