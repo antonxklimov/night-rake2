@@ -251,8 +251,7 @@ def get_user_by_username(username):
     return None
 
 @dp.message(Command("start"))
-@nickname_updater
-async def cmd_start(message: Message, **kwargs):
+async def cmd_start(message: Message):
     user_id = message.from_user.id
     name = message.from_user.full_name
     username = message.from_user.username or ""
@@ -502,8 +501,7 @@ async def handle_photo_with_sign(message: Message):
     await cmd_progress_buttons(message)
 
 @dp.message(Command("delete"))
-@nickname_updater
-async def cmd_delete(message: Message, **kwargs):
+async def cmd_delete(message: Message):
     if message.from_user.id not in ADMINS:
         return
     args = message.text.split()
@@ -542,8 +540,7 @@ async def cmd_myid(message: Message):
     await message.answer(f"Ваш Telegram ID: {message.from_user.id}")
 
 @dp.message(Command("add"))
-@nickname_updater
-async def cmd_add(message: Message, **kwargs):
+async def cmd_add(message: Message):
     if message.from_user.id not in ADMINS:
         return
     args = message.text.split()
@@ -564,8 +561,7 @@ async def cmd_add(message: Message, **kwargs):
     await message.answer(f"@{username}: +{n} баллов. Теперь {user['Баллы']} баллов. (Источник: {source})")
 
 @dp.message(Command("check"))
-@nickname_updater
-async def cmd_check(message: Message, **kwargs):
+async def cmd_check(message: Message):
     if message.from_user.id not in ADMINS:
         return
     args = message.text.split()
@@ -589,8 +585,7 @@ async def cmd_check(message: Message, **kwargs):
     await message.answer(text, parse_mode="HTML")
 
 @dp.message(Command("broadcast"))
-@nickname_updater
-async def cmd_broadcast(message: Message, **kwargs):
+async def cmd_broadcast(message: Message):
     if message.from_user.id not in ADMINS:
         return
     args = message.text.split(maxsplit=1)
@@ -608,8 +603,7 @@ async def cmd_broadcast(message: Message, **kwargs):
     await message.answer(f"Рассылка завершена. Отправлено {count} пользователям.")
 
 @dp.message(Command("residentify"))
-@nickname_updater
-async def cmd_residentify(message: Message, **kwargs):
+async def cmd_residentify(message: Message):
     if message.from_user.id not in ADMINS:
         return
     args = message.text.split()
