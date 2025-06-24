@@ -171,6 +171,10 @@ REWARDS = [
 class CheckinPhoto(StatesGroup):
     waiting_for_photo = State()
 
+# FSM для фото с другом
+class FriendPhoto(StatesGroup):
+    waiting_for_photo = State()
+
 bot = Bot(token=API_TOKEN)
 storage = MemoryStorage()
 dp = Dispatcher(storage=storage)
@@ -499,18 +503,59 @@ async def handle_back_to_menu(message: Message):
     await message.answer("Окей, возвращаемся в меню...", reply_markup=get_main_kb(user))
 
 @dp.message(lambda m: m.text == "Привёл друга")
-async def handle_friend_brought(message: Message):
+async def handle_friend_brought(message: Message, state: FSMContext):
     user_id = message.from_user.id
     user = get_user(user_id)
     conds = get_conditions(user)
-    if not conds[1]:
-        conds[1] = True
+    if conds[1]:
+        await message.answer("Уже засчитано! 😕", reply_markup=get_main_kb(user))
+        return
+    await message.answer("Пришли фото с другом для подтверждения! 🤳", reply_markup=ReplyKeyboardRemove())
+    await state.set_state(FriendPhoto.waiting_for_photo)
+
+@dp.message(FriendPhoto.waiting_for_photo)
+async def process_friend_photo(message: Message, state: FSMContext):
+    if message.text and message.text.startswith("/"):
+        await state.clear()
+        await dp.feed_update(message)
+        return
+    user_id = message.from_user.id
+    user = get_user(user_id)
+    if not user:
+        await message.answer("Сначала запусти бота!  /start!", reply_markup=get_main_kb(user))
+        await state.clear()
+        return
+    if not message.photo:
+        await message.answer("Пожалуйста, пришли именно фото с другом! 🤳")
+        return
+    # Сохраняем фото локально
+    photo = message.photo[-1]
+    file = await bot.get_file(photo.file_id)
+    file_path = file.file_path
+    local_path = f"friend_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
+    await bot.download_file(file_path, local_path)
+    # Отправляем быстрое сообщение
+    thinking_msg = await message.answer("Бот думает... ⌛")
+    # Загрузка фото в Google Drive и получение ссылки
+    from google_sheets import upload_photo_to_drive
+    drive_link = upload_photo_to_drive(local_path, os.path.basename(local_path))
+    os.remove(local_path)
+    user = get_user(user_id)
+    if user:
+        user['Фото с другом'] = drive_link
         user['Баллы'] = int(user['Баллы']) + 1
         user['Привел друга'] = 'yes'
         update_user(user_id, user)
-        await message.answer("Привёл друга засчитано! +1 грабля 🏅", reply_markup=get_main_kb(user))
-    else:
-        await message.answer("Уже засчитано! 😕", reply_markup=get_main_kb(user))
+    await state.clear()
+    await bot.send_message(
+        chat_id=message.chat.id,
+        text="Фото с другом засчитано! +1 грабля 🏅",
+        reply_markup=get_main_kb(user)
+    )
+    try:
+        await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+    except Exception:
+        pass
 
 @dp.message(lambda m: m.text == "История из зала")
 async def handle_story(message: Message):
