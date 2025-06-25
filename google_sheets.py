@@ -1,6 +1,7 @@
 import os
 import unicodedata
 import logging
+from typing import List, Dict, Any, Optional
 
 # Название таблицы и листа
 SPREADSHEET_ID = '1pozCL8pbOxpE8lRMA_EDzGkcsutDj6c36UA00TSyS_M'
