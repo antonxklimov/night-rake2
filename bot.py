@@ -49,6 +49,7 @@ else:
 
 # --- КЭШ пользователей ---
 users_cache = {}
+users_dirty = set()  # Telegram ID пользователей, которые были изменены
 
 # --- Инициализация кэша при старте ---
 def load_users_cache():
@@ -59,38 +60,45 @@ def load_users_cache():
     for row in records[1:]:
         user = row_to_user(row, header_mapping)
         users_cache[user['Telegram ID']] = user
+    users_dirty.clear()
 
-# --- Получить пользователя: сначала кэш, потом Google Sheets ---
+# --- Получить пользователя: только из кэша ---
 def get_user(user_id):
-    user = users_cache.get(str(user_id))
-    if user is None:
-        from google_sheets import get_user as gs_get_user
-        user = gs_get_user(user_id)
-        if user:
-            users_cache[str(user_id)] = user
-    return user
+    return users_cache.get(str(user_id))
 
-# --- Добавить пользователя ---
+# --- Добавить пользователя: только в кэш ---
 def add_user(user_id, name, username=""):
-    from google_sheets import add_user as gs_add_user, get_user as gs_get_user
-    gs_add_user(user_id, name, username)
-    user = gs_get_user(user_id)
-    if user:
-        users_cache[str(user_id)] = user
+    user = {
+        'Telegram ID': str(user_id),
+        'Никнейм': username,
+        'Имя': name,
+        'Баллы': 0,
+        'Даты посещений': '',
+        'Фото': '',
+        'Ссылка на фото': '',
+        'Фото с табличкой': '',
+        'История': '',
+        'Выступление': '',
+        'Привел друга': '',
+        'Фото с другом': '',
+        '3 визита подряд': '',
+        'Резидент': 'no',
+        'last_checkin_ts': '',
+        'last_condition_ts': '',
+        'conditions_after_checkin': '0',
+    }
+    users_cache[str(user_id)] = user
+    users_dirty.add(str(user_id))
 
-# --- Обновить пользователя ---
+# --- Обновить пользователя: только в кэш ---
 def update_user(user_id, data):
-    from google_sheets import update_user as gs_update_user, get_user as gs_get_user, COLUMNS
-    # Гарантируем, что все ключи есть
     for col in COLUMNS:
         if col not in data:
             data[col] = ''
+    users_cache[str(user_id)] = data
+    users_dirty.add(str(user_id))
     logger.info(f"[update_user] user_id={user_id} last_checkin_ts={data.get('last_checkin_ts')} last_condition_ts={data.get('last_condition_ts')} conditions_after_checkin={data.get('conditions_after_checkin')}")
     print(f"[update_user] user_id={user_id} last_checkin_ts={data.get('last_checkin_ts')} last_condition_ts={data.get('last_condition_ts')} conditions_after_checkin={data.get('conditions_after_checkin')}")
-    gs_update_user(user_id, data)
-    user = gs_get_user(user_id)
-    if user:
-        users_cache[str(user_id)] = user
 
 # --- Удалить пользователя из кэша ---
 def delete_user_by_username(username):
@@ -132,35 +140,19 @@ def get_user_by_username_anywhere(username):
             return row_to_user(row, header_mapping), 'sheet'
     return None, None
 
-# --- sync_users_cache: уменьшить интервал до 15 секунд ---
+# --- sync_users_cache: синхронизировать только dirty пользователей раз в 5 секунд ---
 async def sync_users_cache():
+    from google_sheets import update_user as gs_update_user
     while True:
-        ws = get_sheet()
-        from google_sheets import get_header_mapping, find_user_row, update_user, add_user
-        header_mapping = get_header_mapping(ws)
-        records = ws.get_all_values()
-        # Сопоставление Telegram ID -> (row_idx, row_dict)
-        sheet_users = {}
-        for idx, row in enumerate(records[1:], start=2):  # первая строка — заголовки
-            user = row_to_user(row, header_mapping)
-            sheet_users[user['Telegram ID']] = (idx, user)
-        # Обновить существующих и добавить новых
-        for telegram_id, cache_user in users_cache.items():
-            sheet_entry = sheet_users.get(telegram_id)
-            if sheet_entry:
-                idx, sheet_user = sheet_entry
-                # Если данные отличаются — обновить
-                if any(str(cache_user.get(col, '')) != str(sheet_user.get(col, '')) for col in COLUMNS):
-                    row = [cache_user.get(col, '') for col in COLUMNS]
-                    start_col = gspread.utils.rowcol_to_a1(1, 1)[0]
-                    end_col = gspread.utils.rowcol_to_a1(1, len(header_mapping))[0]
-                    ws.update(f'{start_col}{idx}:{end_col}{idx}', [row])
-            else:
-                # Добавить нового пользователя
-                add_user(cache_user['Telegram ID'], cache_user.get('Имя', ''), cache_user.get('Никнейм', ''))
-                # После добавления можно обновить остальные поля, если нужно
+        dirty = list(users_dirty)
+        for user_id in dirty:
+            user = users_cache.get(user_id)
+            if user:
+                gs_update_user(user_id, user)
+                logger.info(f"[SYNC] Synced user {user_id} to Google Sheets")
+        users_dirty.difference_update(dirty)
         print(f"[SYNC] Users cache synced at {datetime.now()}")
-        await asyncio.sleep(15)  # 15 секунд
+        await asyncio.sleep(5)
 
 # Условия для статуса "Резидент"
 CONDITIONS = [
@@ -842,5 +834,7 @@ if __name__ == "__main__":
     import asyncio
     async def main():
         logger.info("Bot polling started!")
+        load_users_cache()
+        asyncio.create_task(sync_users_cache())
         await dp.start_polling(bot)
     asyncio.run(main()) 
