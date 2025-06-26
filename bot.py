@@ -358,6 +358,8 @@ async def process_checkin_photo(message: Message, state: FSMContext):
     file_path = file.file_path
     local_path = f"checkin_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
     await bot.download_file(file_path, local_path)
+    # Новое: сообщение о загрузке
+    uploading_msg = await message.answer("Фото получено, загружаю в облако... ☁️")
     # Отложенное сообщение
     task, fut = await send_thinking_message_delayed(message, "Бот думает... ⌛", delay=2)
     # Обновляем пользователя в кэше (без ссылки на фото)
@@ -384,6 +386,11 @@ async def process_checkin_photo(message: Message, state: FSMContext):
     await state.clear()
     # Долгая операция: загрузка фото и обновление ссылки
     await _upload_photo_and_update_user(user_id, local_path)
+    # Удаляем сообщение о загрузке
+    try:
+        await bot.delete_message(chat_id=message.chat.id, message_id=uploading_msg.message_id)
+    except Exception:
+        pass
     # Follow-up сообщение с результатом
     await bot.send_message(
         chat_id=message.chat.id,
@@ -572,6 +579,8 @@ async def process_friend_photo(message: Message, state: FSMContext):
     file_path = file.file_path
     local_path = f"friend_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
     await bot.download_file(file_path, local_path)
+    # Новое: сообщение о загрузке
+    uploading_msg = await message.answer("Фото получено, загружаю в облако... ☁️")
     # Отложенное сообщение
     task, fut = await send_thinking_message_delayed(message, "Бот думает... ⌛", delay=2)
     # Загрузка фото в Google Drive и получение ссылки
@@ -587,6 +596,11 @@ async def process_friend_photo(message: Message, state: FSMContext):
         user['conditions_after_checkin'] = str(int(user.get('conditions_after_checkin', '0')) + 1)
         update_user(user_id, user)
     await state.clear()
+    # Удаляем сообщение о загрузке
+    try:
+        await bot.delete_message(chat_id=message.chat.id, message_id=uploading_msg.message_id)
+    except Exception:
+        pass
     await bot.send_message(
         chat_id=message.chat.id,
         text="Фото с другом засчитано! +1 грабля 🏅",
