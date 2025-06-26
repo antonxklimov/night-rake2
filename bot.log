@@ -1,49 +1,56 @@
 /Users/antonklimov/Library/Python/3.9/lib/python/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
   warnings.warn(
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7427155199)
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 1.000000 seconds and try again... (tryings = 0, bot id = 7427155199)
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 1.369709 seconds and try again... (tryings = 1, bot id = 7427155199)
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 1.763357 seconds and try again... (tryings = 2, bot id = 7427155199)
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 2.175820 seconds and try again... (tryings = 3, bot id = 7427155199)
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 2.678665 seconds and try again... (tryings = 4, bot id = 7427155199)
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 3.460458 seconds and try again... (tryings = 5, bot id = 7427155199)
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 4.458873 seconds and try again... (tryings = 6, bot id = 7427155199)
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 5.016829 seconds and try again... (tryings = 7, bot id = 7427155199)
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 4.899957 seconds and try again... (tryings = 8, bot id = 7427155199)
-Failed to fetch updates - TelegramConflictError: Telegram server says - Conflict: terminated by other getUpdates request; make sure that only one bot instance is running
-Sleep for 5.012686 seconds and try again... (tryings = 9, bot id = 7427155199)
 Received SIGTERM signal
-[SYNC] Users cache synced at 2025-06-24 12:45:34.619332
-[SYNC] Users cache synced at 2025-06-24 12:45:51.949080
-[SYNC] Users cache synced at 2025-06-24 12:46:08.964763
-[SYNC] Users cache synced at 2025-06-24 12:46:25.860669
-[SYNC] Users cache synced at 2025-06-24 12:46:43.133616
-[SYNC] Users cache synced at 2025-06-24 12:47:00.914668
-[SYNC] Users cache synced at 2025-06-24 12:47:17.585755
-[SYNC] Users cache synced at 2025-06-24 12:47:34.974181
-[SYNC] Users cache synced at 2025-06-24 12:47:51.752585
-[SYNC] Users cache synced at 2025-06-24 12:48:08.377044
-[SYNC] Users cache synced at 2025-06-24 12:48:24.994571
-[SYNC] Users cache synced at 2025-06-24 12:48:41.719313
-[SYNC] Users cache synced at 2025-06-24 12:48:59.291665
-[SYNC] Users cache synced at 2025-06-24 12:49:16.027327
-[SYNC] Users cache synced at 2025-06-24 12:49:33.112373
-[SYNC] Users cache synced at 2025-06-24 12:49:50.766059
-[SYNC] Users cache synced at 2025-06-24 12:50:08.457201
-[SYNC] Users cache synced at 2025-06-24 12:50:25.349554
-[SYNC] Users cache synced at 2025-06-24 12:50:43.161501
-[SYNC] Users cache synced at 2025-06-24 12:50:59.965496
-[SYNC] Users cache synced at 2025-06-24 12:51:17.164399
-[SYNC] Users cache synced at 2025-06-24 12:51:34.305213
-[SYNC] Users cache synced at 2025-06-24 12:51:52.995038
-[SYNC] Users cache synced at 2025-06-24 12:52:10.160756
+[SYNC] Users cache synced at 2025-06-24 13:34:16.042333
+[SYNC] Users cache synced at 2025-06-24 13:34:32.732506
+[SYNC] Users cache synced at 2025-06-24 13:34:49.851648
+[SYNC] Users cache synced at 2025-06-24 13:35:06.190498
+[SYNC] Users cache synced at 2025-06-24 13:35:24.394889
+[SYNC] Users cache synced at 2025-06-24 13:35:41.542500
+[SYNC] Users cache synced at 2025-06-24 13:35:58.726548
+[SYNC] Users cache synced at 2025-06-24 13:36:15.355220
+[SYNC] Users cache synced at 2025-06-24 13:36:32.116497
+[SYNC] Users cache synced at 2025-06-24 13:36:49.208959
+[SYNC] Users cache synced at 2025-06-24 13:37:05.960938
+[SYNC] Users cache synced at 2025-06-24 13:37:23.350910
+[SYNC] Users cache synced at 2025-06-24 13:37:40.684902
+[SYNC] Users cache synced at 2025-06-24 13:37:58.172467
+[SYNC] Users cache synced at 2025-06-24 13:38:15.829164
+[SYNC] Users cache synced at 2025-06-24 13:38:33.448340
+[SYNC] Users cache synced at 2025-06-24 13:38:50.432907
+[SYNC] Users cache synced at 2025-06-24 13:39:07.481737
+[SYNC] Users cache synced at 2025-06-24 13:39:24.090276
+[SYNC] Users cache synced at 2025-06-24 13:39:40.692174
+[SYNC] Users cache synced at 2025-06-24 13:39:57.347631
+[SYNC] Users cache synced at 2025-06-24 13:40:14.976184
+[SYNC] Users cache synced at 2025-06-24 13:40:32.043323
+[SYNC] Users cache synced at 2025-06-24 13:40:48.980705
+[SYNC] Users cache synced at 2025-06-24 13:41:05.596537
+[SYNC] Users cache synced at 2025-06-24 13:41:22.744341
+[SYNC] Users cache synced at 2025-06-24 13:41:39.372880
+[SYNC] Users cache synced at 2025-06-24 13:41:56.010279
+[SYNC] Users cache synced at 2025-06-24 13:42:12.644589
+[SYNC] Users cache synced at 2025-06-24 13:42:29.248962
+[SYNC] Users cache synced at 2025-06-24 13:42:47.109824
+[SYNC] Users cache synced at 2025-06-24 13:43:03.734214
+[SYNC] Users cache synced at 2025-06-24 13:43:20.460099
+[SYNC] Users cache synced at 2025-06-24 13:43:37.055528
+[SYNC] Users cache synced at 2025-06-24 13:43:53.984424
+[SYNC] Users cache synced at 2025-06-24 13:44:11.039407
+[SYNC] Users cache synced at 2025-06-24 13:44:27.652834
+[SYNC] Users cache synced at 2025-06-24 13:44:44.257899
+[SYNC] Users cache synced at 2025-06-24 13:45:01.154282
+[SYNC] Users cache synced at 2025-06-24 13:45:18.213598
+[SYNC] Users cache synced at 2025-06-24 13:45:35.361232
+[SYNC] Users cache synced at 2025-06-24 13:45:52.176285
+[SYNC] Users cache synced at 2025-06-24 13:46:09.625950
+[SYNC] Users cache synced at 2025-06-24 13:46:26.175019
+[SYNC] Users cache synced at 2025-06-24 13:46:43.437414
+[SYNC] Users cache synced at 2025-06-24 13:47:00.432739
+[SYNC] Users cache synced at 2025-06-24 13:47:17.119029
+[SYNC] Users cache synced at 2025-06-24 13:47:34.309011
+[SYNC] Users cache synced at 2025-06-24 13:47:50.893053
+[SYNC] Users cache synced at 2025-06-24 13:48:07.534628
+[SYNC] Users cache synced at 2025-06-24 13:48:24.453428
+2025-06-24 19:11:22,857 [INFO] Bot started!
+2025-06-24 19:15:10,276 [INFO] Bot started!

@@ -355,3 +355,26 @@ Traceback (most recent call last):
   File "/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/google/oauth2/_client.py", line 72, in _handle_error_response
     raise exceptions.RefreshError(
 google.auth.exceptions.RefreshError: ('invalid_grant: Invalid JWT Signature.', {'error': 'invalid_grant', 'error_description': 'Invalid JWT Signature.'})
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+Bot function started!
+Traceback (most recent call last):
+  File "/Users/antonklimov/web projects/topgrabli_bot/bot.py", line 33, in <module>
+    raise RuntimeError("TELEGRAM_API_TOKEN is not set in environment variables!")
+RuntimeError: TELEGRAM_API_TOKEN is not set in environment variables!
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+2025-06-24 19:11:22,857 [INFO] Bot started!
+Bot function started!
+Traceback (most recent call last):
+  File "/Users/antonklimov/web projects/topgrabli_bot/bot.py", line 34, in <module>
+    raise RuntimeError("TELEGRAM_API_TOKEN is not set in environment variables!")
+RuntimeError: TELEGRAM_API_TOKEN is not set in environment variables!
+/Users/antonklimov/Desktop/topgrabli_bot/venv/lib/python3.9/site-packages/urllib3/__init__.py:35: NotOpenSSLWarning: urllib3 v2 only supports OpenSSL 1.1.1+, currently the 'ssl' module is compiled with 'LibreSSL 2.8.3'. See: https://github.com/urllib3/urllib3/issues/3020
+  warnings.warn(
+2025-06-24 19:15:10,276 [INFO] Bot started!
+Bot function started!
+Traceback (most recent call last):
+  File "/Users/antonklimov/web projects/topgrabli_bot/bot.py", line 34, in <module>
+    raise RuntimeError("TELEGRAM_API_TOKEN is not set in environment variables!")
+RuntimeError: TELEGRAM_API_TOKEN is not set in environment variables!

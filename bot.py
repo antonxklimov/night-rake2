@@ -11,9 +11,9 @@ from aiogram.fsm.state import State, StatesGroup
 from aiogram.fsm.storage.memory import MemoryStorage
 from datetime import datetime, timedelta
 from google_sheets import get_sheet, row_to_user, upload_photo_to_drive, COLUMNS, delete_user_by_telegram_id, normalize_header
+import gspread
 # --- Для вебхуков ---
 import logging
-from aiohttp import web
 
 # Настройка логирования
 logging.basicConfig(
@@ -776,37 +776,6 @@ async def cmd_residentify(message: Message):
     update_user(user['Telegram ID'], user)
     await message.answer(f"@{username} теперь резидент! (Источник: {source})")
 
-async def main(context):
-    try:
-        context.log(f"Received request: {context.req.method} {context.req.path}")
-        context.log(f"Context dir: {dir(context)}")
-        if hasattr(context, 'req'):
-            context.log(f"Context.req dir: {dir(context.req)}")
-        # Универсально получить тело запроса
-        request_body = None
-        if hasattr(context, 'req_body'):
-            request_body = context.req_body
-        elif hasattr(context, 'req') and hasattr(context.req, 'body'):
-            request_body = context.req.body
-        elif hasattr(context, 'data'):
-            request_body = context.data
-        elif hasattr(context, 'req') and hasattr(context.req, 'json'):
-            # Возможно, это async-метод
-            try:
-                request_body = await context.req.json()
-            except Exception as e:
-                context.error(f"context.req.json() error: {e}")
-        if request_body is None:
-            context.error("Не удалось найти тело запроса!")
-            return context.res.json({"error": "No request body found"}, 400)
-        context.log(f"Request body: {request_body}")
-        update = Update.model_validate(request_body)
-        await dp.feed_update(bot, update)
-        return context.res.json({"status": "ok"})
-    except Exception as e:
-        context.error(f"Error: {e}")
-        return context.res.json({"error": str(e)})
-
 # В каждом хендлере условия (кроме чек-ина) — проверяю таймаут
 TIMEOUT_MINUTES = 15
 TIMEOUT_MSG = "Ой!\n\nДай себе отдохнуть 😮‍💨\nПопробуй через некоторое время!"
@@ -830,4 +799,11 @@ def can_perform_condition(user):
         return True, None
     if datetime.now() - last_dt < timedelta(minutes=TIMEOUT_MINUTES):
         return False, TIMEOUT_MSG
-    return True, None 
+    return True, None
+
+if __name__ == "__main__":
+    import asyncio
+    async def main():
+        logger.info("Bot polling started!")
+        await dp.start_polling(bot)
+    asyncio.run(main()) 

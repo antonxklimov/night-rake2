@@ -1,7 +1,11 @@
+import gspread
+from google.oauth2.service_account import Credentials
+from typing import List, Dict, Any, Optional
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaFileUpload
 import os
 import unicodedata
 import logging
-from typing import List, Dict, Any, Optional
 
 # Название таблицы и листа
 SPREADSHEET_ID = '1pozCL8pbOxpE8lRMA_EDzGkcsutDj6c36UA00TSyS_M'
@@ -16,8 +20,6 @@ COLUMNS = [
 
 # Авторизация и подключение к таблице
 def get_sheet():
-    import gspread
-    from google.oauth2.service_account import Credentials
     creds = Credentials.from_service_account_file('/tmp/credentials.json', scopes=[
         'https://www.googleapis.com/auth/spreadsheets',
         'https://www.googleapis.com/auth/drive',
@@ -29,8 +31,6 @@ def get_sheet():
 
 # Авторизация для Google Drive
 def get_drive_service():
-    from google.oauth2.service_account import Credentials
-    from googleapiclient.discovery import build
     creds = Credentials.from_service_account_file('/tmp/credentials.json', scopes=[
         'https://www.googleapis.com/auth/drive',
     ])
@@ -43,7 +43,6 @@ def upload_photo_to_drive(local_path: str, filename: str) -> str:
         'name': filename,
         'parents': [DRIVE_FOLDER_ID]
     }
-    from googleapiclient.http import MediaFileUpload
     media = MediaFileUpload(local_path, mimetype='image/jpeg')
     file = service.files().create(body=file_metadata, media_body=media, fields='id').execute()
     # Сделать файл публичным
