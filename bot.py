@@ -14,6 +14,7 @@ from google_sheets import get_sheet, row_to_user, upload_photo_to_drive, COLUMNS
 import gspread
 # --- Для вебхуков ---
 import logging
+import contextlib
 
 # Настройка логирования
 logging.basicConfig(
@@ -273,24 +274,36 @@ def get_user_by_username(username):
             return user
     return None
 
+# Вспомогательная функция для отложенного сообщения
+async def send_thinking_message_delayed(message, text, delay=2):
+    """Отправляет сообщение через delay секунд, если не отменено. Возвращает (task, future для отмены)."""
+    fut = asyncio.get_event_loop().create_future()
+    async def _delayed():
+        try:
+            await asyncio.sleep(delay)
+            if not fut.done():
+                fut.set_result(await message.answer(text))
+        except asyncio.CancelledError:
+            pass
+    task = asyncio.create_task(_delayed())
+    return task, fut
+
 @dp.message(Command("start"))
 async def cmd_start(message: Message):
     user_id = message.from_user.id
     name = message.from_user.full_name
     username = message.from_user.username or ""
-    # Быстрый UX: отправляем сообщение о запуске
-    thinking_msg = await message.answer("Завожу мотор... 🏎️")
+    # Отложенное сообщение
+    task, fut = await send_thinking_message_delayed(message, "Завожу мотор... 🏎️", delay=2)
     user = get_user(user_id)
     if not user:
         add_user(user_id, name, username)
         user = get_user(user_id)
-        # Инициализируем новые поля сразу
         user['last_checkin_ts'] = ''
         user['last_condition_ts'] = ''
         user['conditions_after_checkin'] = '0'
         update_user(user_id, user)
     else:
-        # Обновляем имя и никнейм, если пользователь уже есть
         user['Имя'] = name
         user['Никнейм'] = username
         update_user(user_id, user)
@@ -300,11 +313,16 @@ async def cmd_start(message: Message):
         "За баллы — футболка, пицца и место в первом ряду.\n\n"
         "Всё просто. Добро пожаловать!"
     )
-    # Удаляем thinking message
-    try:
-        await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
-    except Exception:
-        pass
+    # Завершили быстро — отменяем сообщение
+    task.cancel()
+    with contextlib.suppress(asyncio.CancelledError):
+        await task
+    if fut.done():
+        thinking_msg = fut.result()
+        try:
+            await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+        except Exception:
+            pass
     await message.answer(text, reply_markup=get_main_kb(user))
 
 @dp.message(Command("чек-ин"))
@@ -348,8 +366,8 @@ async def process_checkin_photo(message: Message, state: FSMContext):
     file_path = file.file_path
     local_path = f"checkin_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
     await bot.download_file(file_path, local_path)
-    # Отправляем быстрое сообщение о том, что бот думает
-    thinking_msg = await message.answer("Бот думает... ⌛")
+    # Отложенное сообщение
+    task, fut = await send_thinking_message_delayed(message, "Бот думает... ⌛", delay=2)
     # Обновляем пользователя в кэше (без ссылки на фото)
     visits = parse_visits(user['Даты посещений'])
     today = datetime.now().date()
@@ -381,11 +399,15 @@ async def process_checkin_photo(message: Message, state: FSMContext):
         reply_markup=get_main_kb(user),
         parse_mode="HTML"
     )
-    # Удаляем сообщение 'Бот думает...'
-    try:
-        await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
-    except Exception:
-        pass
+    task.cancel()
+    with contextlib.suppress(asyncio.CancelledError):
+        await task
+    if fut.done():
+        thinking_msg = fut.result()
+        try:
+            await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+        except Exception:
+            pass
 
 @dp.message(Command("баланс"))
 async def cmd_balance(message: Message):
@@ -558,8 +580,8 @@ async def process_friend_photo(message: Message, state: FSMContext):
     file_path = file.file_path
     local_path = f"friend_{user_id}_{datetime.now().strftime('%Y%m%d_%H%M%S')}.jpg"
     await bot.download_file(file_path, local_path)
-    # Отправляем быстрое сообщение
-    thinking_msg = await message.answer("Бот думает... ⌛")
+    # Отложенное сообщение
+    task, fut = await send_thinking_message_delayed(message, "Бот думает... ⌛", delay=2)
     # Загрузка фото в Google Drive и получение ссылки
     from google_sheets import upload_photo_to_drive
     drive_link = upload_photo_to_drive(local_path, os.path.basename(local_path))
@@ -578,10 +600,15 @@ async def process_friend_photo(message: Message, state: FSMContext):
         text="Фото с другом засчитано! +1 грабля 🏅",
         reply_markup=get_main_kb(user)
     )
-    try:
-        await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
-    except Exception:
-        pass
+    task.cancel()
+    with contextlib.suppress(asyncio.CancelledError):
+        await task
+    if fut.done():
+        thinking_msg = fut.result()
+        try:
+            await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+        except Exception:
+            pass
 
 @dp.message(lambda m: m.text == "История из зала")
 async def handle_story(message: Message):
@@ -652,15 +679,20 @@ async def cmd_delete(message: Message):
         await message.answer("Используй: /delete @username или /delete username")
         return
     username = args[1].lstrip("@")
-    # Быстрый ответ админу
-    thinking_msg = await message.answer("Бот думает... ⌛")
+    # Отложенное сообщение
+    task, fut = await send_thinking_message_delayed(message, "Бот думает... ⌛", delay=2)
     user, source = get_user_by_username_anywhere(username)
     if not user:
         await message.answer(f"Пользователь {args[1]} не найден или у него не установлен username.")
-        try:
-            await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
-        except Exception:
-            pass
+        task.cancel()
+        with contextlib.suppress(asyncio.CancelledError):
+            await task
+        if fut.done():
+            thinking_msg = fut.result()
+            try:
+                await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+            except Exception:
+                pass
         return
     # Удаляем из кэша и из таблицы
     deleted_cache = delete_user_by_username(username)
@@ -669,10 +701,15 @@ async def cmd_delete(message: Message):
         deleted_sheet = delete_user_by_telegram_id(int(user['Telegram ID']))
     load_users_cache()
     await message.answer(f"Пользователь @{username} удалён из базы (кэш: {deleted_cache}, таблица: {deleted_sheet}). Прогресс сброшен. (Источник: {source})")
-    try:
-        await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
-    except Exception:
-        pass
+    task.cancel()
+    with contextlib.suppress(asyncio.CancelledError):
+        await task
+    if fut.done():
+        thinking_msg = fut.result()
+        try:
+            await bot.delete_message(chat_id=message.chat.id, message_id=thinking_msg.message_id)
+        except Exception:
+            pass
 
 @dp.message(Command("admin"))
 async def cmd_admin(message: Message):
